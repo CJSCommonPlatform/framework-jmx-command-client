@@ -6,30 +6,34 @@ import uk.gov.justice.services.jmx.ShutteringMBean;
 
 import java.io.IOException;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
 
-
+@ApplicationScoped
 public class ShutteringInvoker {
-    private ShutteringInvoker(){}
+    public ShutteringInvoker(){}
 
     private static final String SHUTTERING = "shuttering";
 
-    private static MBeanHelper mBeanHelper = new MBeanHelper();
+    @Inject
+    MBeanHelper mBeanHelper;
 
-    public static  void runShuttering(final boolean isShutteringRequired, final String host, final String port) throws IOException, MalformedObjectNameException {
+    public  void runShuttering(final boolean isShutteringRequired, final String host, final String port) throws IOException, MalformedObjectNameException {
         try(final JMXConnector jmxConnector = mBeanHelper.getJMXConnector(host, port)){
 
             final MBeanServerConnection connection = jmxConnector.getMBeanServerConnection();
 
             final ObjectName objectName = new ObjectName(SHUTTERING, "type", Shuttering.class.getSimpleName());
 
+            final ShutteringMBean mbeanProxy = mBeanHelper.getMbeanProxy(connection, objectName, ShutteringMBean.class);
             if(isShutteringRequired) {
-                mBeanHelper.getMbeanProxy(connection, objectName, ShutteringMBean.class).doShutteringRequested();
+                mbeanProxy.doShutteringRequested();
             } else {
-                mBeanHelper.getMbeanProxy(connection, objectName, ShutteringMBean.class).doUnshutteringRequested();
+                mbeanProxy.doUnshutteringRequested();
             }
         }
     }

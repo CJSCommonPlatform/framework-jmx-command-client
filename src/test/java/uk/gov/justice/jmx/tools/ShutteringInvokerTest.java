@@ -1,63 +1,76 @@
 package uk.gov.justice.jmx.tools;
 
-import static java.util.Arrays.asList;
-import static uk.gov.justice.jmx.tools.factory.MBeanFactory.createTestMBeans;
-import static uk.gov.justice.jmx.tools.factory.MBeanFactory.matchingnames;
+import static org.mockito.Mockito.doReturn;
 
 import uk.gov.justice.jmx.connector.MBeanHelper;
+import uk.gov.justice.services.jmx.Shuttering;
+import uk.gov.justice.services.jmx.ShutteringMBean;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.management.JMException;
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
+import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+import javax.management.remote.JMXConnector;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShutteringInvokerTest {
+    private static final String SHUTTERING = "shuttering";
+
+    @Mock
+    private JMXConnector jmxConnector;
+
+    @Mock
+    private MBeanServerConnection mBeanServerConnection;
+
+    @Mock
+    private  MBeanHelper mBeanHelper;
+
+    @Mock
+    private ShutteringMBean shutteringMBean;
+
+    @InjectMocks
+    ShutteringInvoker shutteringInvoker;
 
     @Test
     public void runShuttering() throws JMException, IOException {
 
+        final String host = "localhost";
+        final String port = "9999";
+        final ObjectName objectName = new ObjectName(SHUTTERING, "type", Shuttering.class.getSimpleName());
 
-        MBeanHelper mBeanHelper =  new MBeanHelper();
-        final MBeanServer server = MBeanServerFactory.newMBeanServer();
-        
+        doReturn(jmxConnector).when(mBeanHelper).getJMXConnector(host, port);
 
-        // Fill the MBeanServer with dummy MBean which will match
-        createTestMBeans("shuttering", server);
+        doReturn(mBeanServerConnection).when(jmxConnector).getMBeanServerConnection();
 
-        // Fill the MBeanServer with dummy MBean which will not match
-        createTestMBeans("catchup", server);
+        doReturn(shutteringMBean)
+                .when(mBeanHelper).getMbeanProxy(mBeanServerConnection, objectName, ShutteringMBean.class);
 
-        // compute expected result
-        final Set<String> expectedResult = new HashSet<String>();
-        for (String names : matchingnames()) {
-            expectedResult.add(new ObjectName(names).getDomain());
-        }
-
-        // call my method
-        final String[] testResult = mBeanHelper.getMbeanDomains(server);
-
-        final Set<String> resultSet = new HashSet<String>();
-        resultSet.addAll(asList(testResult));
-
-        expectedResult.forEach(e -> verifyMbeanInDomain(e, resultSet));
+        shutteringInvoker.runShuttering(true, host, port);
 
     }
 
-    private void verifyMbeanInDomain(final String e, final Set<String> testResult) {
+    @Test
+    public void runUnShuttering() throws JMException, IOException {
 
-        if (testResult.contains(e)) {
-            return;
-        }else{
-            throw new RuntimeException("test failed");
-        }
+        final String host = "localhost";
+        final String port = "9999";
+        final ObjectName objectName = new ObjectName(SHUTTERING, "type", Shuttering.class.getSimpleName());
+
+        doReturn(jmxConnector).when(mBeanHelper).getJMXConnector(host, port);
+
+        doReturn(mBeanServerConnection).when(jmxConnector).getMBeanServerConnection();
+
+        doReturn(shutteringMBean)
+                .when(mBeanHelper).getMbeanProxy(mBeanServerConnection, objectName, ShutteringMBean.class);
+
+        shutteringInvoker.runShuttering(false, host, port);
+
     }
 }

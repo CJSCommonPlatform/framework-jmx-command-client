@@ -4,8 +4,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static uk.gov.justice.Operations.CATCHUP;
 import static uk.gov.justice.Operations.SHUTTER;
 import static uk.gov.justice.Operations.UNSHUTTER;
-import static uk.gov.justice.jmx.tools.CatchUpInvoker.runCatchup;
-import static uk.gov.justice.jmx.tools.ShutteringInvoker.runShuttering;
+
+import uk.gov.justice.jmx.tools.CatchUpInvoker;
+import uk.gov.justice.jmx.tools.ShutteringInvoker;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
@@ -29,13 +33,13 @@ public class CatchUpAndShutteringManager {
         logger.info("Port: {}", port);
 
         if(operation.equalsIgnoreCase(SHUTTER.name())){
-            runShuttering(true, host, port);
+            new ShutteringInvoker().runShuttering(true, host, port);
         }
         if(operation.equalsIgnoreCase(UNSHUTTER.name())){
-            runShuttering(false, host, port);
+            new ShutteringInvoker().runShuttering(false, host, port);
         }
         if(operation.equalsIgnoreCase(CATCHUP.name())){
-            runCatchup(host, port);
+            new CatchUpInvoker().runCatchup(host, port);
         }
     }
 }

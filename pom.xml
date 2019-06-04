@@ -10,7 +10,6 @@
     <version>1.7.1</version>
   </parent>
 
-  <groupId>uk.gov.justice</groupId>
   <artifactId>catchup-shuttering-manager</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -25,7 +24,6 @@
     <framework-generators.version>2.0.0-M15</framework-generators.version>
     <framework-api.version>4.0.0-M18</framework-api.version>
     <wildfly.version>10.0.0.Final</wildfly.version>
-    <jboss.home>${project.build.directory}/wildfly-${wildfly.version}</jboss.home>
   </properties>
 
   <dependencyManagement>
@@ -188,43 +186,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <!--<plugin>-->
-        <!--<groupId>org.wildfly.plugins</groupId>-->
-        <!--<artifactId>wildfly-maven-plugin</artifactId>-->
-        <!--<configuration>-->
-          <!--&lt;!&ndash;<jbossHome>${jboss.home}</jbossHome>&ndash;&gt;-->
-          <!--&lt;!&ndash;<serverConfig>${server.config}</serverConfig>&ndash;&gt;-->
-          <!--<timeout>120</timeout>-->
-          <!--<java-opts>-->
-            <!--<javaOpt>-DDEFAULT_PORT=9998</javaOpt>-->
-            <!--&lt;!&ndash;<java-opt>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8888</java-opt>&ndash;&gt;-->
-          <!--</java-opts>-->
-          <!--<port>9999</port>-->
-          <!--<version>${wildfly.version}</version>-->
-        <!--</configuration>-->
-        <!--<executions>-->
-          <!--<execution>-->
-            <!--<id>start-server</id>-->
-            <!--<phase>pre-integration-test</phase>-->
-            <!--<goals>-->
-              <!--<goal>start</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-              <!--<startupTimeout>120</startupTimeout>-->
-            <!--</configuration>-->
-          <!--</execution>-->
-          <!--<execution>-->
-            <!--<id>stop-server</id>-->
-            <!--<phase>post-integration-test</phase>-->
-            <!--<goals>-->
-              <!--<goal>shutdown</goal>-->
-            <!--</goals>-->
-          <!--</execution>-->
-        <!--</executions>-->
-      <!--</plugin>-->
-
-
     </plugins>
   </build>
 
