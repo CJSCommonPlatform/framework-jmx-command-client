@@ -5,8 +5,6 @@ import static org.mockito.Mockito.doReturn;
 import uk.gov.justice.jmx.connector.MBeanHelper;
 import uk.gov.justice.services.jmx.Catchup;
 import uk.gov.justice.services.jmx.CatchupMBean;
-import uk.gov.justice.services.jmx.Shuttering;
-import uk.gov.justice.services.jmx.ShutteringMBean;
 
 import java.io.IOException;
 

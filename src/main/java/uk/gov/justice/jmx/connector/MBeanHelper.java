@@ -3,12 +3,13 @@ package uk.gov.justice.jmx.connector;
 import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
 import static javax.management.JMX.newMBeanProxy;
-import static javax.management.remote.JMXConnectorFactory.connect;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.util.List;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
 import javax.management.MBeanInfo;
@@ -21,9 +22,13 @@ import javax.management.remote.JMXServiceURL;
 
 import org.slf4j.Logger;
 
+@ApplicationScoped
 public class MBeanHelper {
 
     private static final Logger logger = getLogger(MBeanHelper.class.getName());
+
+    @Inject
+    JMXConnectionHelperFactory jmxConnectionHelperFactory;
 
     public <T> T getMbeanProxy(final MBeanServerConnection connection, final ObjectName objectName, final Class<T> mBeanInterface) {
         return newMBeanProxy(connection, objectName, mBeanInterface, true);
@@ -52,8 +57,8 @@ public class MBeanHelper {
 
         final String urlString =
                 getProperty("jmx.service.url","service:jmx:remote+http://" + host + ":" + port);
-        final JMXServiceURL serviceURL = new JMXServiceURL(urlString);
+        final JMXServiceURL serviceURL = jmxConnectionHelperFactory.createJMXServiceURL(urlString);
 
-        return connect(serviceURL, null);
+        return jmxConnectionHelperFactory.connect(serviceURL, null);
     }
 }
