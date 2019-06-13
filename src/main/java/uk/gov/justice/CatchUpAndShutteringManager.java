@@ -1,45 +1,32 @@
 package uk.gov.justice;
 
-import static org.slf4j.LoggerFactory.getLogger;
-import static uk.gov.justice.Operations.CATCHUP;
-import static uk.gov.justice.Operations.SHUTTER;
-import static uk.gov.justice.Operations.UNSHUTTER;
+import static java.lang.System.exit;
 
-import uk.gov.justice.jmx.tools.CatchUpInvoker;
-import uk.gov.justice.jmx.tools.ShutteringInvoker;
+import uk.gov.justice.jmx.tools.ArgumentValidator;
+import uk.gov.justice.jmx.tools.SystemCommandInvoker;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
-import org.slf4j.Logger;
-
+@ApplicationScoped
 public class CatchUpAndShutteringManager {
 
-    private static final Logger logger = getLogger(CatchUpAndShutteringManager.class.getName());
-
     /**
-     *
      * @param args operation, host, port
-     * @throws Exception
      */
-    public static void main(String... args) throws Exception {
+    public static void main(String... args) {
+        final ArgumentValidator argumentValidator = new ArgumentValidator();
 
-        final String operation = args[0];
+        final String command = args[0];
         final String host = args[1];
         final String port = args[2];
 
-        logger.info("Operation: {}", operation);
-        logger.info("Host: {}", host);
-        logger.info("Port: {}", port);
+        argumentValidator.logCMDArgs(command, host, port);
 
-        if(operation.equalsIgnoreCase(SHUTTER.name())){
-            new ShutteringInvoker().runShuttering(true, host, port);
+        if(!argumentValidator.checkArgsNotNull(command, host, port)){
+            exit(1);
         }
-        if(operation.equalsIgnoreCase(UNSHUTTER.name())){
-            new ShutteringInvoker().runShuttering(false, host, port);
-        }
-        if(operation.equalsIgnoreCase(CATCHUP.name())){
-            new CatchUpInvoker().runCatchup(host, port);
-        }
+
+        SystemCommandInvoker systemCommandInvoker = new SystemCommandInvoker();
+        systemCommandInvoker.runSystemCommand(command, host, port);
     }
 }
