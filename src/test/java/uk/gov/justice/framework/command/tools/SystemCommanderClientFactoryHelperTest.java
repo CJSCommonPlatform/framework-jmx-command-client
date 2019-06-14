@@ -1,4 +1,4 @@
-package uk.gov.justice.jmx.tools;
+package uk.gov.justice.framework.command.tools;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertThat;

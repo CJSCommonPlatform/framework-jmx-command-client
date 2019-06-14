@@ -1,6 +1,7 @@
-package uk.gov.justice.jmx.tools;
+package uk.gov.justice.framework.command.tools;
 
 import static java.lang.Integer.parseInt;
+import static uk.gov.justice.Operation.*;
 
 import uk.gov.justice.Operation;
 import uk.gov.justice.services.eventstore.management.catchup.commands.CatchupCommand;
@@ -18,33 +19,32 @@ import org.slf4j.Logger;
 @ApplicationScoped
 public class SystemCommandInvoker {
 
+    private static final String UNKNOWN = "UNKNOWN";
     private String commandName;
 
     @Inject
     private Logger logger;
 
     @Inject
-    private SystemCommanderClientFactoryHelper systemCommanderClientFactoryHelper;
+    private EnumValidator enumValidator;
 
     @Inject
-    private ArgumentValidator argumentValidator;
+    private SystemCommanderClientFactoryHelper systemCommanderClientFactoryHelper;
 
     public void runSystemCommand(final String command, final String host, final String port) {
 
         final SystemCommanderClientFactory systemCommanderClientFactory = systemCommanderClientFactoryHelper.makeSystemCommanderClientFactory();
 
-        try (final SystemCommanderClient systemCommanderClient = systemCommanderClientFactory.create(host, parseInt(port))){
+        try (final SystemCommanderClient systemCommanderClient = systemCommanderClientFactory.create(host, parseInt(port))) {
 
-            if(!argumentValidator.checkCommandIsValid(command, host, port)){
-                if(!command.equalsIgnoreCase("UNKNOWN")){
-                    commandName = "UNKNOWN";
-                }
-            }else{
+            if (!enumValidator.checkCommandIsValid(command)) {
+                setUnKnownCommandName(command);
+            } else {
                 commandName = command;
             }
 
-            Operation operation = Operation.valueOf(commandName);
-            switch(operation){
+            Operation operation = valueOf(commandName);
+            switch (operation) {
                 case SHUTTER:
                     callSystemCommand(systemCommanderClient, new ShutterSystemCommand());
                     break;
@@ -60,6 +60,12 @@ public class SystemCommandInvoker {
             }
         }
 
+    }
+
+    private void setUnKnownCommandName(final String command) {
+        if (!command.equalsIgnoreCase(UNKNOWN)) {
+            commandName = UNKNOWN;
+        }
     }
 
     private static void callSystemCommand(final SystemCommanderClient systemCommanderClient, final BaseSystemCommand systemCommand) {

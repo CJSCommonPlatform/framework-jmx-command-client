@@ -1,12 +1,13 @@
-package uk.gov.justice.jmx.tools;
+package uk.gov.justice.framework.command.tools;
 
 
 import static java.lang.Integer.parseInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.justice.Operation.UNKNOWN;
+import static uk.gov.justice.Operation.REBUILD;
 
+import uk.gov.justice.Operation;
 import uk.gov.justice.services.jmx.command.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
@@ -24,6 +25,7 @@ public class SystemCommandInvokerTest {
     private static final String SHUTTER = "SHUTTER";
     private static final String UNSHUTTER = "UNSHUTTER";
     private static final String CATCHUP = "CATCHUP";
+    private static final String REBUILD = "REBUILD";
 
     private String host;
     private String port;
@@ -44,7 +46,7 @@ public class SystemCommandInvokerTest {
     private SystemCommanderMBean systemCommanderMBean;
 
     @Mock
-    private ArgumentValidator argumentValidator;
+    private EnumValidator enumValidator;
 
     @InjectMocks
     SystemCommandInvoker systemCommandInvoker;
@@ -58,7 +60,7 @@ public class SystemCommandInvokerTest {
     @Test
     public void shouldCallShuttering(){
 
-        when(argumentValidator.checkCommandIsValid("SHUTTER", host, port)).thenReturn(true);
+        when(enumValidator.checkCommandIsValid("SHUTTER")).thenReturn(true);
 
         when(systemCommanderClientFactoryHelper.makeSystemCommanderClientFactory()).thenReturn(systemCommanderClientFactory);
 
@@ -72,7 +74,7 @@ public class SystemCommandInvokerTest {
     @Test
     public void shouldCallUnShuttering(){
 
-        when(argumentValidator.checkCommandIsValid("UNSHUTTER", host, port)).thenReturn(true);
+        when(enumValidator.checkCommandIsValid("UNSHUTTER")).thenReturn(true);
 
         when(systemCommanderClientFactoryHelper.makeSystemCommanderClientFactory()).thenReturn(systemCommanderClientFactory);
 
@@ -86,7 +88,7 @@ public class SystemCommandInvokerTest {
     @Test
     public void shouldCallCatchup(){
 
-        when(argumentValidator.checkCommandIsValid("CATCHUP", host, port)).thenReturn(true);
+        when(enumValidator.checkCommandIsValid("CATCHUP")).thenReturn(true);
 
         when(systemCommanderClientFactoryHelper.makeSystemCommanderClientFactory()).thenReturn(systemCommanderClientFactory);
 
@@ -98,9 +100,23 @@ public class SystemCommandInvokerTest {
     }
 
     @Test
+    public void shouldCallRebuild(){
+
+        when(enumValidator.checkCommandIsValid("REBUILD")).thenReturn(true);
+
+        when(systemCommanderClientFactoryHelper.makeSystemCommanderClientFactory()).thenReturn(systemCommanderClientFactory);
+
+        doReturn(systemCommanderClient).when(systemCommanderClientFactory).create(host, parseInt(port));
+
+        when(systemCommanderClient.getRemote()).thenReturn(systemCommanderMBean);
+
+        systemCommandInvoker.runSystemCommand(Operation.REBUILD.name(), host, port);
+    }
+
+    @Test
     public void shouldLogWhenCommandCannotBeCalled(){
 
-        when(argumentValidator.checkCommandIsValid("TEST", host, port)).thenReturn(false);
+        when(enumValidator.checkCommandIsValid("TEST")).thenReturn(false);
 
         when(systemCommanderClientFactoryHelper.makeSystemCommanderClientFactory()).thenReturn(systemCommanderClientFactory);
 
@@ -116,7 +132,7 @@ public class SystemCommandInvokerTest {
     @Test
     public void shouldLogWhenCommandIsUnknown(){
 
-        when(argumentValidator.checkCommandIsValid(UNKNOWN.name(), host, port)).thenReturn(true);
+        when(enumValidator.checkCommandIsValid(Operation.UNKNOWN.name())).thenReturn(true);
 
         when(systemCommanderClientFactoryHelper.makeSystemCommanderClientFactory()).thenReturn(systemCommanderClientFactory);
 

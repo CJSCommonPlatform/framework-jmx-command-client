@@ -1,9 +1,7 @@
 package uk.gov.justice;
 
-import static java.lang.System.exit;
-
-import uk.gov.justice.jmx.tools.ArgumentValidator;
-import uk.gov.justice.jmx.tools.SystemCommandInvoker;
+import uk.gov.justice.framework.command.tools.CommandLineArgumentParser;
+import uk.gov.justice.framework.command.tools.SystemCommandInvoker;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -14,19 +12,20 @@ public class CatchUpAndShutteringManager {
      * @param args operation, host, port
      */
     public static void main(String... args) {
-        final ArgumentValidator argumentValidator = new ArgumentValidator();
 
-        final String command = args[0];
-        final String host = args[1];
-        final String port = args[2];
+        boolean argumentParsed = new CommandLineArgumentParser(args).parse();
 
-        argumentValidator.logCMDArgs(command, host, port);
+        if(argumentParsed){
+            final String command = args[0];
+            final String host = args[1];
+            final String port = args[2];
 
-        if(!argumentValidator.checkArgsNotNull(command, host, port)){
-            exit(1);
+            SystemCommandInvoker systemCommandInvoker = new SystemCommandInvoker();
+
+            systemCommandInvoker.runSystemCommand(command, host, port);
         }
-
-        SystemCommandInvoker systemCommandInvoker = new SystemCommandInvoker();
-        systemCommandInvoker.runSystemCommand(command, host, port);
+        else{
+            System.exit(1);
+        }
     }
 }

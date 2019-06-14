@@ -1,4 +1,4 @@
-package uk.gov.justice.jmx.tools;
+package uk.gov.justice.framework.command.tools;
 
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
 
