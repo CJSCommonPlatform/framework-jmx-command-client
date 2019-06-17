@@ -16,8 +16,8 @@ public class CommandLineArgumentParserTest {
 
     @Before
     public void before() {
-        host = "-localhost";
-        port = "-9999";
+        host = "localhost";
+        port = "9999";
     }
 
     @Test

@@ -10,7 +10,6 @@ public class CatchUpAndShutteringManagerTest {
     private String host;
     private String port;
 
-
     @Before
     public void before() {
         host = "-localhost";

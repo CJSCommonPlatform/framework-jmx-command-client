@@ -102,7 +102,7 @@ public class SystemCommandInvokerTest {
     @Test
     public void shouldCallRebuild(){
 
-        when(enumValidator.checkCommandIsValid("REBUILD")).thenReturn(true);
+        when(enumValidator.checkCommandIsValid(REBUILD)).thenReturn(true);
 
         when(systemCommanderClientFactoryHelper.makeSystemCommanderClientFactory()).thenReturn(systemCommanderClientFactory);
 
