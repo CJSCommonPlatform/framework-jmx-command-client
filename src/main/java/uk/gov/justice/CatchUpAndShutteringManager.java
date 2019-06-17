@@ -1,18 +1,23 @@
 package uk.gov.justice;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import uk.gov.justice.framework.command.tools.CommandLineArgumentParser;
 import uk.gov.justice.framework.command.tools.SystemCommandInvoker;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.slf4j.Logger;
+
 @ApplicationScoped
 public class CatchUpAndShutteringManager {
+
+    private static final Logger logger = getLogger(CatchUpAndShutteringManager.class.getName());
 
     /**
      * @param args operation, host, port
      */
     public static void main(String... args) {
-
         boolean argumentParsed = new CommandLineArgumentParser(args).parse();
 
         if(argumentParsed){
@@ -23,9 +28,11 @@ public class CatchUpAndShutteringManager {
             SystemCommandInvoker systemCommandInvoker = new SystemCommandInvoker();
 
             systemCommandInvoker.runSystemCommand(command, host, port);
+
+            logger.info("CatchUpAndShutteringManager invoked successfully");
         }
         else{
-            System.exit(1);
+            logger.error("CatchUpAndShutteringManager not invoked successfully!!! Please check command line arguments & usage");
         }
     }
 }
