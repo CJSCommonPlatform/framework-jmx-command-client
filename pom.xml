@@ -92,7 +92,7 @@
   </dependencies>
 
   <build>
-    <finalName>CatchUpAndShutteringManager</finalName>
+
     <plugins>
 
 
@@ -105,6 +105,8 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
+          <finalName>${project.name}</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
           <!-- MainClass in mainfest make a executable jar -->
           <archive>
             <manifest>

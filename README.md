@@ -11,4 +11,4 @@ CatchUpAndShutteringManager
  -ho,--host <arg>     Host Remote or Localhost
  -p,--port <arg>      Wildfly management port
  
- java -jar CatchUpAndShutteringManager.jar -c "SHUTTERING" -ho "localhost" -p "9999"
+ java -jar catchup-shuttering-manager.jar -c "SHUTTER" -ho "localhost" -p "9999"
