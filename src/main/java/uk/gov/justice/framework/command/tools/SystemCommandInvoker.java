@@ -5,6 +5,7 @@ import static uk.gov.justice.Operation.*;
 
 import uk.gov.justice.Operation;
 import uk.gov.justice.services.eventstore.management.catchup.commands.CatchupCommand;
+import uk.gov.justice.services.eventstore.management.rebuild.commands.RebuildCommand;
 import uk.gov.justice.services.jmx.command.BaseSystemCommand;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
@@ -53,6 +54,9 @@ public class SystemCommandInvoker {
                     break;
                 case CATCHUP:
                     callSystemCommand(systemCommanderClient, new CatchupCommand());
+                    break;
+                case REBUILD:
+                    callSystemCommand(systemCommanderClient, new RebuildCommand());
                     break;
                 default:
                     logger.info("{} is not a valid system command", command);
