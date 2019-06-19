@@ -31,10 +31,10 @@ public class CommandLineArgumentParser {
     }
 
     public boolean parse() {
-        CommandLineParser parser = new BasicParser();
+        final CommandLineParser parser = new BasicParser();
 
         try {
-            CommandLine cmd = parser.parse(options, args);
+            final CommandLine cmd = parser.parse(options, args);
 
             if (cmd.hasOption("h")){
                 help();
@@ -47,7 +47,7 @@ public class CommandLineArgumentParser {
                 return false;
             }
 
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             logger.info("Failed to parse command line properties", e);
             help();
             return false;
@@ -56,22 +56,22 @@ public class CommandLineArgumentParser {
 
     private void help() {
         // This prints out some help
-        HelpFormatter formatter = new HelpFormatter();
+        final HelpFormatter formatter = new HelpFormatter();
 
-        formatter.printHelp("CatchUpAndShutteringManager", options);
+        formatter.printHelp("java -jar catchup-shuttering-manager.jar", options);
     }
 
-    private boolean isCommandNullOrEmpty(CommandLine cmd){
+    private boolean isCommandNullOrEmpty(final CommandLine cmd){
         return cmd.hasOption("c") &&
                 (isNotBlank(cmd.getOptionValue("c")));
     }
 
-    private boolean isHostNullOrEmpty(CommandLine cmd){
+    private boolean isHostNullOrEmpty(final CommandLine cmd){
         return cmd.hasOption("ho") &&
                 isNotBlank(cmd.getOptionValue("ho"));
     }
 
-    private boolean isPortNullOrEmpty(CommandLine cmd){
+    private boolean isPortNullOrEmpty(final CommandLine cmd){
         return cmd.hasOption("p") &&
                 isNotBlank(cmd.getOptionValue("p"));
     }

@@ -7,14 +7,13 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class EnumValidator {
 
-
-    public boolean checkCommandIsValid(final String command) {
+    boolean checkCommandIsValid(final String command) {
         return contains(Operation.class, command);
     }
 
-    private static boolean contains(Class<? extends Enum> clazz, String val) {
-        Enum[] arr = clazz.getEnumConstants();
-        for (Enum operation : arr) {
+    private boolean contains(final Class<? extends Enum> clazz, final String val) {
+        final Enum[] arr = clazz.getEnumConstants();
+        for (final Enum operation : arr) {
             if (operation.name().equals(val)) {
                 return true;
             }

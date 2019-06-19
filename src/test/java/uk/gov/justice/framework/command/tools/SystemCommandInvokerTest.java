@@ -8,9 +8,13 @@ import static org.mockito.Mockito.when;
 import static uk.gov.justice.Operation.REBUILD;
 
 import uk.gov.justice.Operation;
+import uk.gov.justice.services.eventstore.management.catchup.commands.CatchupCommand;
+import uk.gov.justice.services.eventstore.management.rebuild.commands.RebuildCommand;
 import uk.gov.justice.services.jmx.command.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
+import uk.gov.justice.services.management.shuttering.command.ShutterSystemCommand;
+import uk.gov.justice.services.management.shuttering.command.UnshutterSystemCommand;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -69,6 +73,10 @@ public class SystemCommandInvokerTest {
         when(systemCommanderClient.getRemote()).thenReturn(systemCommanderMBean);
 
         systemCommandInvoker.runSystemCommand(SHUTTER, host, port);
+
+        verify(systemCommanderClient).getRemote();
+
+        verify(systemCommanderMBean).call(new ShutterSystemCommand());
     }
 
     @Test
@@ -83,6 +91,10 @@ public class SystemCommandInvokerTest {
         when(systemCommanderClient.getRemote()).thenReturn(systemCommanderMBean);
 
         systemCommandInvoker.runSystemCommand(UNSHUTTER, host, port);
+
+        verify(systemCommanderClient).getRemote();
+
+        verify(systemCommanderMBean).call(new UnshutterSystemCommand());
     }
 
     @Test
@@ -97,6 +109,10 @@ public class SystemCommandInvokerTest {
         when(systemCommanderClient.getRemote()).thenReturn(systemCommanderMBean);
 
         systemCommandInvoker.runSystemCommand(CATCHUP, host, port);
+
+        verify(systemCommanderClient).getRemote();
+
+        verify(systemCommanderMBean).call(new CatchupCommand());
     }
 
     @Test
@@ -111,6 +127,10 @@ public class SystemCommandInvokerTest {
         when(systemCommanderClient.getRemote()).thenReturn(systemCommanderMBean);
 
         systemCommandInvoker.runSystemCommand(Operation.REBUILD.name(), host, port);
+
+        verify(systemCommanderClient).getRemote();
+
+        verify(systemCommanderMBean).call(new RebuildCommand());
     }
 
     @Test

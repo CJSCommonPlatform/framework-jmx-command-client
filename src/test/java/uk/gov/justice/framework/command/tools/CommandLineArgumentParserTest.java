@@ -5,10 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class CommandLineArgumentParserTest {
     private String host;
     private String port;
@@ -22,7 +19,7 @@ public class CommandLineArgumentParserTest {
 
     @Test
     public void shouldReturnTrueWhenCommandLineArgumentsAreValid() {
-        String [] args = {"-c", "SHUTTER", "-ho", host, "-p", port};
+        final String [] args = {"-c", "SHUTTER", "-ho", host, "-p", port};
 
         final CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser(args);
 
@@ -33,7 +30,7 @@ public class CommandLineArgumentParserTest {
 
     @Test
     public void shouldReturnTrueWhenAllCommandLineArgumentsAreGivenAndValid() {
-        String [] args = {"-h", "-c", "SHUTTER", "-ho", host, "-p", port};
+        final String [] args = {"-h", "-c", "SHUTTER", "-ho", host, "-p", port};
 
         final CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser(args);
 
@@ -44,7 +41,7 @@ public class CommandLineArgumentParserTest {
 
     @Test
     public void shouldReturnFalseWhenCommandLineArgumentIsEmpty() {
-        String [] args = {"-c", "", "-ho", host, "-p", port};
+        final String [] args = {"-c", "", "-ho", host, "-p", port};
 
         final CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser(args);
 
@@ -55,7 +52,7 @@ public class CommandLineArgumentParserTest {
 
     @Test
     public void shouldReturnFalseWhenCommandLineArgumentsParseFails() {
-        String [] args = {"-g", "SHUTTER", "-ho", host, "-p", port};
+        final String [] args = {"-g", "SHUTTER", "-ho", host, "-p", port};
 
         final CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser(args);
 

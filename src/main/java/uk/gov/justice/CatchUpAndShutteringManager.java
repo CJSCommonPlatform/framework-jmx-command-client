@@ -26,14 +26,14 @@ public class CatchUpAndShutteringManager {
             final String host = args[1];
             final String port = args[2];
 
-            SystemCommandInvoker systemCommandInvoker = new SystemCommandInvoker();
+            final SystemCommandInvoker systemCommandInvoker = new SystemCommandInvoker();
 
             systemCommandInvoker.runSystemCommand(command, host, port);
 
-            logger.info("CatchUpAndShutteringManager invoked successfully");
+            logger.info("java -jar catchup-shuttering-manager.jar -c -{} -ho -{} -p -{} invoked successfully", command, host, port);
         }
         else{
-            logger.error("CatchUpAndShutteringManager not invoked successfully!!! Please check command line arguments & usage");
+            logger.error("java -jar catchup-shuttering-manager.jar not invoked successfully!!! Please check command line arguments & usage");
         }
     }
 }
