@@ -18,7 +18,8 @@ public class CatchUpAndShutteringManager {
      * @param args operation, host, port
      */
     public static void main(String... args) {
-        boolean argumentParsed = new CommandLineArgumentParser(args).parse();
+        final CommandLineArgumentParser commandLineArgumentParser = new CommandLineArgumentParser(args);
+        final boolean argumentParsed = commandLineArgumentParser.parse();
 
         if(argumentParsed){
             final String command = args[0];
