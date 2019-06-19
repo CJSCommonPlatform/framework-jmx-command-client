@@ -4,10 +4,8 @@ import static uk.gov.justice.CatchUpAndShutteringManager.main;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)public class CatchUpAndShutteringManagerTest {
+public class CatchUpAndShutteringManagerTest {
     private String host;
     private String port;
 

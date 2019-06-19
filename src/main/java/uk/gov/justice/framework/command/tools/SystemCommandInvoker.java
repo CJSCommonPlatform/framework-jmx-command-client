@@ -44,7 +44,7 @@ public class SystemCommandInvoker {
                 commandName = command;
             }
 
-            Operation operation = valueOf(commandName);
+            final Operation operation = valueOf(commandName);
             switch (operation) {
                 case SHUTTER:
                     callSystemCommand(systemCommanderClient, new ShutterSystemCommand());
