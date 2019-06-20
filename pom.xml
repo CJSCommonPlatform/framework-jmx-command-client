@@ -15,7 +15,6 @@
   <packaging>pom</packaging>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <framework.version>6.0.0-M30</framework.version>
     <event-store.version>2.0.0-M35</event-store.version>
     <framework-generators.version>2.0.0-M15</framework-generators.version>
