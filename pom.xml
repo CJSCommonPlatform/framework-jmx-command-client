@@ -6,8 +6,8 @@
 
   <parent>
     <groupId>uk.gov.justice</groupId>
-    <artifactId>maven-framework-parent-pom</artifactId>
-    <version>1.13.0</version>
+    <artifactId>maven-parent-pom</artifactId>
+    <version>1.7.1</version>
   </parent>
 
   <artifactId>catchup-shuttering-manager</artifactId>
@@ -94,9 +94,18 @@
   </dependencies>
 
   <build>
-
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <argLine>${argLine} -Xmx64m</argLine>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
-
 
       <!-- Maven Assembly Plugin -->
       <plugin>
@@ -128,6 +137,16 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.eluder.coveralls</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+
     </plugins>
   </build>
 
