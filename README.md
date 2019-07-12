@@ -1,4 +1,4 @@
-# CatchUp And Shuttering Manager
+# Framework Jmx Command Client
 
 [![Build Status](https://travis-ci.org/CJSCommonPlatform/catchup-and-shuttering-manager.svg?branch=master)](https://travis-ci.org/CJSCommonPlatform/catchup-and-shuttering-manager) [![Coverage Status](https://coveralls.io/repos/github/CJSCommonPlatform/catchup-and-shuttering-manager/badge.svg?branch=master)](https://coveralls.io/github/CJSCommonPlatform/catchup-and-shuttering-manager?branch=master)
 
