@@ -4,6 +4,8 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [1.0.0] 2019-07-12
 ### Added
 - Initial release of the catchup-shuttering-manager CLI tool, supporting invocation of the event sourcing frameworks SHUTTER, UNSHUTTER, CATCHUP, REBUILD operations.
 - New command '--list' which lists the commands available on your Wildfly instance.
