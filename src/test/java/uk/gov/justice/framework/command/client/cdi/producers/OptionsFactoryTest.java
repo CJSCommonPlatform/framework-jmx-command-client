@@ -14,16 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OptionsProducerTest {
+public class OptionsFactoryTest {
 
     @InjectMocks
-    private OptionsProducer optionsProducer;
+    private OptionsFactory optionsFactory;
 
     @SuppressWarnings("unchecked")
     @Test
     public void shouldCreateNewOptionsObjectConfiguredWithTheCorrectCommandLineParameters() throws Exception {
 
-        final Options options = optionsProducer.options();
+        final Options options = optionsFactory.createOptions();
 
         final Collection<Option> allOptions = options.getOptions();
 

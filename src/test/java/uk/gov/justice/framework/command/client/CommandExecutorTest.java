@@ -3,28 +3,25 @@ package uk.gov.justice.framework.command.client;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-
-import org.apache.commons.cli.CommandLine;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
 
 import uk.gov.justice.framework.command.client.io.CommandPrinter;
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.framework.command.client.jmx.SystemCommandInvoker;
-import uk.gov.justice.services.jmx.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
 
 import java.util.List;
+
+import org.apache.commons.cli.CommandLine;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 
 @RunWith(MockitoJUnitRunner.class)

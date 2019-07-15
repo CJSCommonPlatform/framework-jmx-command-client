@@ -8,9 +8,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import uk.gov.justice.framework.command.client.cdi.producers.OptionsFactory;
 import uk.gov.justice.framework.command.client.jmx.ListCommandsInvoker;
 import uk.gov.justice.framework.command.client.startup.CommandLineArgumentParser;
-import uk.gov.justice.services.jmx.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class MainApplicationTest {
     private ListCommandsInvoker listCommandsInvoker;
 
     @Mock
-    private Options options;
+    private OptionsFactory optionsFactory;
 
     @Mock
     private HelpFormatter formatter;
@@ -77,6 +78,9 @@ public class MainApplicationTest {
 
         final String[] args = {"some", "args"};
 
+        final Options options = mock(Options.class);
+
+        when(optionsFactory.createOptions()).thenReturn(options);
         when(commandLineArgumentParser.parse(args)).thenReturn(empty());
 
         mainApplication.run(args);

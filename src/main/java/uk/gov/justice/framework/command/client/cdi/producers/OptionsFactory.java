@@ -4,10 +4,9 @@ import javax.enterprise.inject.Produces;
 
 import org.apache.commons.cli.Options;
 
-public class OptionsProducer {
+public class OptionsFactory {
 
-    @Produces
-    public Options options() {
+    public Options createOptions() {
         final Options options = new Options();
 
         options.addOption("c", "command", true, "Framework command to execute. Run with --list for a list of all commands");

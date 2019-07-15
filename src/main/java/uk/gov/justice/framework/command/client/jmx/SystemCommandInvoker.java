@@ -1,8 +1,8 @@
 package uk.gov.justice.framework.command.client.jmx;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
-import uk.gov.justice.services.jmx.command.SystemCommand;
-import uk.gov.justice.services.jmx.command.SystemCommanderMBean;
+import uk.gov.justice.services.jmx.api.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxAuthenticationException;

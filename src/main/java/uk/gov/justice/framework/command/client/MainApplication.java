@@ -1,8 +1,9 @@
 package uk.gov.justice.framework.command.client;
 
+import uk.gov.justice.framework.command.client.cdi.producers.OptionsFactory;
 import uk.gov.justice.framework.command.client.jmx.ListCommandsInvoker;
 import uk.gov.justice.framework.command.client.startup.CommandLineArgumentParser;
-import uk.gov.justice.services.jmx.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
 
 import java.util.List;
@@ -12,7 +13,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
 
 public class MainApplication {
 
@@ -26,7 +26,7 @@ public class MainApplication {
     private ListCommandsInvoker listCommandsInvoker;
 
     @Inject
-    private Options options;
+    private OptionsFactory optionsFactory;
 
     @Inject
     private HelpFormatter formatter;
@@ -48,7 +48,7 @@ public class MainApplication {
             systemCommandsOptional.ifPresent(systemCommands -> commandExecutor.executeCommand(commandLine, jmxParameters, systemCommands));
 
         } else {
-            formatter.printHelp("java -jar catchup-shuttering-manager.jar", options);
+            formatter.printHelp("java -jar catchup-shuttering-manager.jar", optionsFactory.createOptions());
         }
     }
 }

@@ -1,6 +1,6 @@
 package uk.gov.justice.framework.command.client;
 
-import uk.gov.justice.services.jmx.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommand;
 
 import java.util.List;
 import java.util.Optional;
