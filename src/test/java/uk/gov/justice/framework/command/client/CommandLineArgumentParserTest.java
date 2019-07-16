@@ -7,13 +7,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import uk.gov.justice.framework.command.client.cdi.producers.OptionsFactory;
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.framework.command.client.startup.CommandLineArgumentParser;
 
 import java.util.Optional;
 
+import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.junit.Test;
@@ -29,10 +30,10 @@ public class CommandLineArgumentParserTest {
     private ToConsolePrinter toConsolePrinter;
 
     @Mock
-    private Options options;
+    private OptionsFactory optionsFactory;
 
     @Mock
-    private CommandLineParser commandLineParser;
+    private BasicParser basicParser;
 
     @InjectMocks
     private CommandLineArgumentParser commandLineArgumentParser;
@@ -42,8 +43,10 @@ public class CommandLineArgumentParserTest {
 
         final String[] args = {"some", "args"};
         final CommandLine commandLine = mock(CommandLine.class);
+        final Options options = mock(Options.class);
 
-        when(commandLineParser.parse(options, args)).thenReturn(commandLine);
+        when(optionsFactory.createOptions()).thenReturn(options);
+        when(basicParser.parse(options, args)).thenReturn(commandLine);
         when(commandLine.hasOption("command")).thenReturn(true);
         when(commandLine.hasOption("list")).thenReturn(false);
 
@@ -61,8 +64,10 @@ public class CommandLineArgumentParserTest {
 
         final String[] args = {"some", "args"};
         final CommandLine commandLine = mock(CommandLine.class);
+        final Options options = mock(Options.class);
 
-        when(commandLineParser.parse(options, args)).thenReturn(commandLine);
+        when(optionsFactory.createOptions()).thenReturn(options);
+        when(basicParser.parse(optionsFactory.createOptions(), args)).thenReturn(commandLine);
         when(commandLine.hasOption("command")).thenReturn(false);
         when(commandLine.hasOption("list")).thenReturn(true);
 
@@ -80,8 +85,10 @@ public class CommandLineArgumentParserTest {
 
         final String[] args = {"some", "args"};
         final CommandLine commandLine = mock(CommandLine.class);
+        final Options options = mock(Options.class);
 
-        when(commandLineParser.parse(options, args)).thenReturn(commandLine);
+        when(optionsFactory.createOptions()).thenReturn(options);
+        when(basicParser.parse(optionsFactory.createOptions(), args)).thenReturn(commandLine);
         when(commandLine.hasOption("command")).thenReturn(false);
         when(commandLine.hasOption("list")).thenReturn(false);
 
@@ -98,8 +105,10 @@ public class CommandLineArgumentParserTest {
         final ParseException parseException = new ParseException("ooops");
 
         final String[] args = {"some", "args"};
+        final Options options = mock(Options.class);
 
-        when(commandLineParser.parse(options, args)).thenThrow(parseException);
+        when(optionsFactory.createOptions()).thenReturn(options);
+        when(basicParser.parse(optionsFactory.createOptions(), args)).thenThrow(parseException);
 
         try {
             commandLineArgumentParser.parse(args);

@@ -18,13 +18,9 @@
         <cpp.repo.name>framework-jmx-command-client</cpp.repo.name>
 
         <framework-api.version>4.0.1</framework-api.version>
-        <framework.version>6.0.0-RC4</framework.version>
-        <event-store.version>2.0.0-RC5</event-store.version>
-        <framework-generators.version>2.0.0-RC4</framework-generators.version>
+        <framework.version>6.0.0-RC7</framework.version>
+        <event-store.version>2.0.0-RC7</event-store.version>
         <maven-common-bom.version>2.4.0</maven-common-bom.version>
-
-        <commons.cli.version>1.2</commons.cli.version>
-        <wildfly.version>10.0.0.Final</wildfly.version>
     </properties>
 
     <scm>
@@ -49,26 +45,17 @@
 
         <dependency>
             <groupId>uk.gov.justice.services</groupId>
-            <artifactId>jmx-command-client</artifactId>
+            <artifactId>jmx-api</artifactId>
             <version>${framework.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.justice.services</groupId>
-            <artifactId>framework-management</artifactId>
+            <artifactId>jmx-command-client</artifactId>
             <version>${framework.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.justice.event-store</groupId>
-            <artifactId>event-store-management</artifactId>
-            <version>${event-store.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -81,11 +68,6 @@
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.justice.event-store</groupId>
-            <artifactId>event-buffer-core</artifactId>
-            <version>${event-store.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wildfly</groupId>
@@ -103,6 +85,11 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -128,13 +115,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <!-- get all project dependencies -->
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <finalName>${project.name}</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <!-- MainClass in mainfest make a executable jar -->
+                    <appendAssemblyId>true</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>
@@ -147,7 +131,6 @@
                 <executions>
                     <execution>
                         <id>make-assembly</id>
-                        <!-- bind to the packaging phase -->
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
