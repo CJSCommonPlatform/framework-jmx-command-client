@@ -4,6 +4,10 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Added a mandatory command line switch '--context-name' to allow to connect to a specific context
+
+
 ## [1.0.1] 2019-07-17
 ### Fixed
 - Removed all dependencies on server side code to allow fat jar to be run 

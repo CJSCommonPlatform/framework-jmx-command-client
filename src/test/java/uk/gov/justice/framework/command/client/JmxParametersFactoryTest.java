@@ -26,17 +26,21 @@ public class JmxParametersFactoryTest {
     @Test
     public void shouldCreateJmxParametersFromTheHostAndPort() throws Exception {
 
+        final String contextName = "my-context";
         final String host = "host";
         final String port = "9990";
 
         final CommandLine commandLine = mock(CommandLine.class);
 
+        when(commandLine.hasOption("context-name")).thenReturn(true);
+        when(commandLine.getOptionValue("context-name")).thenReturn(contextName);
         when(commandLine.getOptionValue("host", "localhost")).thenReturn(host);
         when(commandLine.getOptionValue("port", "9990")).thenReturn(port);
         when(commandLine.hasOption("username")).thenReturn(false);
 
         final JmxParameters jmxParameters = jmxParametersFactory.createFrom(commandLine);
 
+        assertThat(jmxParameters.getContextName(), is(contextName));
         assertThat(jmxParameters.getHost(), is(host));
         assertThat(jmxParameters.getPort(), is(9990));
         assertThat(jmxParameters.getCredentials().isPresent(), is(false));
@@ -45,6 +49,7 @@ public class JmxParametersFactoryTest {
     @Test
     public void shouldAlsoAddCredentialsIfTheUsernameExists() throws Exception {
 
+        final String contextName = "my-context";
         final String host = "host";
         final String port = "9990";
         final String username = "Fred";
@@ -52,6 +57,8 @@ public class JmxParametersFactoryTest {
 
         final CommandLine commandLine = mock(CommandLine.class);
 
+        when(commandLine.hasOption("context-name")).thenReturn(true);
+        when(commandLine.getOptionValue("context-name")).thenReturn(contextName);
         when(commandLine.getOptionValue("host", "localhost")).thenReturn(host);
         when(commandLine.getOptionValue("port", "9990")).thenReturn(port);
         when(commandLine.hasOption("username")).thenReturn(true);
@@ -74,13 +81,31 @@ public class JmxParametersFactoryTest {
     }
 
     @Test
+    public void shouldThrowExceptionIfTheContextNameIsMissing() throws Exception {
+
+        final CommandLine commandLine = mock(CommandLine.class);
+
+        when(commandLine.hasOption("context-name")).thenReturn(false);
+
+        try {
+            jmxParametersFactory.createFrom(commandLine);
+            fail();
+        } catch (final CommandLineException expected) {
+            assertThat(expected.getMessage(), is("No context name provided. Please run using --context-name <name> or -cn <name> ."));
+        }
+    }
+
+    @Test
     public void shouldThrowExceptionIfThePortIsNotANumber() throws Exception {
 
+        final String contextName = "my-context";
         final String host = "host";
         final String port = "not-a-number";
 
         final CommandLine commandLine = mock(CommandLine.class);
 
+        when(commandLine.hasOption("context-name")).thenReturn(true);
+        when(commandLine.getOptionValue("context-name")).thenReturn(contextName);
         when(commandLine.getOptionValue("host", "localhost")).thenReturn(host);
         when(commandLine.getOptionValue("port", "9990")).thenReturn(port);
 
