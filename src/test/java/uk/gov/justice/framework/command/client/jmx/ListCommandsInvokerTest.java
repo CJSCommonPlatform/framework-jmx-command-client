@@ -43,6 +43,7 @@ public class ListCommandsInvokerTest {
     @Test
     public void shouldMakeAJmxCallToRetrieveTheListOfCommands() throws Exception {
 
+        final String contextName = "my-context";
         final String host = "localhost";
         final int port = 92834;
 
@@ -52,11 +53,12 @@ public class ListCommandsInvokerTest {
         final SystemCommanderClient systemCommanderClient = mock(SystemCommanderClient.class);
         final SystemCommanderMBean commanderMBean = mock(SystemCommanderMBean.class);
 
+        when(jmxParameters.getContextName()).thenReturn(contextName);
         when(jmxParameters.getHost()).thenReturn(host);
         when(jmxParameters.getPort()).thenReturn(port);
         when(jmxParameters.getCredentials()).thenReturn(empty());
         when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
-        when(systemCommanderClient.getRemote()).thenReturn(commanderMBean);
+        when(systemCommanderClient.getRemote(contextName)).thenReturn(commanderMBean);
         when(commanderMBean.listCommands()).thenReturn(systemCommands);
 
         assertThat(listCommandsInvoker.listSystemCommands(jmxParameters), is(of(systemCommands)));
@@ -66,15 +68,16 @@ public class ListCommandsInvokerTest {
                 systemCommanderClientFactory, 
                 systemCommanderClient);
 
-        inOrder.verify(toConsolePrinter).printf("Connecting to Wildfly instance at '%s' on port %d", host, port);
+        inOrder.verify(toConsolePrinter).printf("Connecting to %s context at '%s' on port %d", contextName, host, port);
         inOrder.verify(systemCommanderClientFactory).create(jmxParameters);
-        inOrder.verify(systemCommanderClient).getRemote();
-        inOrder.verify(toConsolePrinter).println("Connected to remote server");
+        inOrder.verify(systemCommanderClient).getRemote(contextName);
+        inOrder.verify(toConsolePrinter).printf("Connected to %s context", contextName);
     }
 
     @Test
     public void shoulLogIfUsingCredentials() throws Exception {
 
+        final String contextName = "my-context";
         final String host = "localhost";
         final int port = 92834;
         final String username = "Fred";
@@ -86,12 +89,13 @@ public class ListCommandsInvokerTest {
         final SystemCommanderClient systemCommanderClient = mock(SystemCommanderClient.class);
         final SystemCommanderMBean commanderMBean = mock(SystemCommanderMBean.class);
 
+        when(jmxParameters.getContextName()).thenReturn(contextName);
         when(jmxParameters.getHost()).thenReturn(host);
         when(jmxParameters.getPort()).thenReturn(port);
         when(jmxParameters.getCredentials()).thenReturn(of(credentials));
         when(credentials.getUsername()).thenReturn(username);
         when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
-        when(systemCommanderClient.getRemote()).thenReturn(commanderMBean);
+        when(systemCommanderClient.getRemote(contextName)).thenReturn(commanderMBean);
         when(commanderMBean.listCommands()).thenReturn(systemCommands);
 
         assertThat(listCommandsInvoker.listSystemCommands(jmxParameters), is(of(systemCommands)));
@@ -101,16 +105,17 @@ public class ListCommandsInvokerTest {
                 systemCommanderClientFactory,
                 systemCommanderClient);
 
-        inOrder.verify(toConsolePrinter).printf("Connecting to Wildfly instance at '%s' on port %d", host, port);
+        inOrder.verify(toConsolePrinter).printf("Connecting to %s context at '%s' on port %d", contextName, host, port);
         inOrder.verify(toConsolePrinter).printf("Connecting with credentials for user '%s'", username);
         inOrder.verify(systemCommanderClientFactory).create(jmxParameters);
-        inOrder.verify(systemCommanderClient).getRemote();
-        inOrder.verify(toConsolePrinter).println("Connected to remote server");
+        inOrder.verify(systemCommanderClient).getRemote(contextName);
+        inOrder.verify(toConsolePrinter).printf("Connected to %s context", contextName);
     }
 
     @Test
     public void shoulLogAndReturnEmptyIfAuthenticationFails() throws Exception {
 
+        final String contextName = "my-context";
         final String host = "localhost";
         final int port = 92834;
         final String username = "Fred";
@@ -121,6 +126,7 @@ public class ListCommandsInvokerTest {
         final JmxParameters jmxParameters = mock(JmxParameters.class);
         final SystemCommanderClient systemCommanderClient = mock(SystemCommanderClient.class);
 
+        when(jmxParameters.getContextName()).thenReturn(contextName);
         when(jmxParameters.getHost()).thenReturn(host);
         when(jmxParameters.getPort()).thenReturn(port);
         when(jmxParameters.getCredentials()).thenReturn(of(credentials));
@@ -134,7 +140,7 @@ public class ListCommandsInvokerTest {
                 systemCommanderClientFactory,
                 systemCommanderClient);
 
-        inOrder.verify(toConsolePrinter).printf("Connecting to Wildfly instance at '%s' on port %d", host, port);
+        inOrder.verify(toConsolePrinter).printf("Connecting to %s context at '%s' on port %d", contextName, host, port);
         inOrder.verify(toConsolePrinter).printf("Connecting with credentials for user '%s'", username);
         inOrder.verify(toConsolePrinter).println("Authentication failed. Please ensure your username and password are correct");
     }

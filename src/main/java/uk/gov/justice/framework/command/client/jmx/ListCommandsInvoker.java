@@ -28,13 +28,15 @@ public class ListCommandsInvoker {
 
     public Optional<List<SystemCommand>> listSystemCommands(final JmxParameters jmxParameters) {
 
-        toConsolePrinter.printf("Connecting to Wildfly instance at '%s' on port %d", jmxParameters.getHost(), jmxParameters.getPort());
+        final String contextName = jmxParameters.getContextName();
+
+        toConsolePrinter.printf("Connecting to %s context at '%s' on port %d", contextName, jmxParameters.getHost(), jmxParameters.getPort());
         jmxParameters.getCredentials().ifPresent(credentials -> toConsolePrinter.printf("Connecting with credentials for user '%s'", credentials.getUsername()));
 
         try (final SystemCommanderClient systemCommanderClient = systemCommanderClientFactory.create(jmxParameters)) {
-            final SystemCommanderMBean remote = systemCommanderClient.getRemote();
+            final SystemCommanderMBean remote = systemCommanderClient.getRemote(contextName);
 
-            toConsolePrinter.println("Connected to remote server");
+            toConsolePrinter.printf("Connected to %s context", contextName);
 
             return of(remote.listCommands());
 

@@ -9,6 +9,7 @@ public class OptionsFactory {
     public Options createOptions() {
         final Options options = new Options();
 
+        options.addOption("cn", "context-name", true, "The name of the context on which to run the command. Required");
         options.addOption("c", "command", true, "Framework command to execute. Run with --list for a list of all commands");
         options.addOption("h", "host", true, "Hostname or IP address of the Wildfly server. Defaults to localhost");
         options.addOption("p", "port", true, "Wildfly management port. Defaults to 9990");

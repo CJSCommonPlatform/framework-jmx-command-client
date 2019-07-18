@@ -16,12 +16,18 @@ public class JmxParametersFactory {
 
     public JmxParameters createFrom(final CommandLine commandLine) {
 
+        if (!commandLine.hasOption("context-name")) {
+            throw new CommandLineException("No context name provided. Please run using --context-name <name> or -cn <name> .");
+        }
+
+        final String contextName = commandLine.getOptionValue("context-name");
         final String host = commandLine.getOptionValue("host", DEFAULT_HOST);
         final int port = getPort(commandLine);
 
         final JmxParametersBuilder jmxParameters = jmxParameters()
-                    .withHost(host)
-                    .withPort(port);
+                .withContextName(contextName)
+                .withHost(host)
+                .withPort(port);
 
         if (commandLine.hasOption("username")) {
 

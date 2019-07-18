@@ -22,19 +22,22 @@ public class SystemCommandInvoker {
 
     public void runSystemCommand(final SystemCommand systemCommand, final JmxParameters jmxParameters) {
 
-        toConsolePrinter.printf("Running system command '%s'", systemCommand.getName());
+        final String commandName = systemCommand.getName();
+        final String contextName = jmxParameters.getContextName();
 
-        toConsolePrinter.printf("Connecting to Wildfly instance at '%s' on port %d", jmxParameters.getHost(), jmxParameters.getPort());
+        toConsolePrinter.printf("Running system command '%s'", commandName);
+        toConsolePrinter.printf("Connecting to %s context at '%s' on port %d", contextName, jmxParameters.getHost(), jmxParameters.getPort());
+
         jmxParameters.getCredentials().ifPresent(credentials -> toConsolePrinter.printf("Connecting with credentials for user '%s'", credentials.getUsername()));
 
         try (final SystemCommanderClient systemCommanderClient = systemCommanderClientFactory.create(jmxParameters)) {
-            final SystemCommanderMBean systemCommanderMBean = systemCommanderClient.getRemote();
+            final SystemCommanderMBean systemCommanderMBean = systemCommanderClient.getRemote(contextName);
 
-            toConsolePrinter.println("Connected to remote server");
+            toConsolePrinter.printf("Connected to %s context", contextName);
 
             systemCommanderMBean.call(systemCommand);
 
-            toConsolePrinter.printf("System command '%s' successfully sent", systemCommand.getName());
+            toConsolePrinter.printf("System command '%s' successfully sent to %s", commandName, contextName);
 
         } catch (final JmxAuthenticationException e) {
             toConsolePrinter.println("Authentication failed. Please ensure your username and password are correct");
