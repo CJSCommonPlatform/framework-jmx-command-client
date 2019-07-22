@@ -10,18 +10,19 @@ From Framework 6.0.0 and above
 
 **java -jar framework-jmx-command-client.jar _\<options\>_**
 
-- **-c,--command** <arg>     _The name of the System Command to run_
-- **-h,--host** <arg>        _Hostname or IP address of the Wildfly server. Defaults to localhost_
-- **-p,--port** <arg>        _Wildfly management port. Defaults to 9990 (the default for Wildfly)_
-- **-u, --username**         _Optional username for Wildfly management security_
-- **-pw, --password**        _Optional password for Wildfly management security_
-- **-l, --list**             _Shows a list of all framework System Commands and exits_
-- **--help**                 _Show help message and exits._
+- **-cn,--context-name** <arg>  _The name of the context on which to run the command. Required_
+- **-c,--command** <arg>        _The name of the System Command to run_
+- **-h,--host** <arg>           _Hostname or IP address of the Wildfly server. Defaults to localhost_
+- **-p,--port** <arg>           _Wildfly management port. Defaults to 9990 (the default for Wildfly)_
+- **-u, --username**            _Optional username for Wildfly management security_
+- **-pw, --password**           _Optional password for Wildfly management security_
+- **-l, --list**                _Shows a list of all framework System Commands and exits_
+- **--help**                    _Show help message and exits._
  
 ### For example 
-_java -jar framework-jmx-command-client.jar --command PING_
+_java -jar framework-jmx-command-client.jar --context-name example-single --command PING_
 
-Would run the command 'PING' against a local wildfly instance with no authentication
+Would run the command 'PING' against a local wildfly instance with no authentication with a example-single.war deployed
  
 ###### Note: 
  If you are running wildfly on your local machine and running as the same user as the one you are
