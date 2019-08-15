@@ -5,6 +5,10 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.0.0] 2019-08-15
+### Changed
+- Update to framework 6.0.2
+
 ## [1.0.2] 2019-07-18
 ### Added
 - Added a mandatory command line switch '--context-name' to allow to connect to a specific context
