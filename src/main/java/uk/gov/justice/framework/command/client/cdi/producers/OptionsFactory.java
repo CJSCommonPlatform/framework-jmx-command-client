@@ -1,7 +1,5 @@
 package uk.gov.justice.framework.command.client.cdi.producers;
 
-import javax.enterprise.inject.Produces;
-
 import org.apache.commons.cli.Options;
 
 public class OptionsFactory {

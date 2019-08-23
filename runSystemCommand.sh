@@ -11,7 +11,7 @@
 #
 ################################################
 
-FRAMEWORK_JMX_COMMAND_CLIENT_VERSION=2.1.0=SNAPSHOT
+FRAMEWORK_JMX_COMMAND_CLIENT_VERSION=2.1.0-SNAPSHOT
 CONTEXT_NAME="people"
 USER_NAME="admin"
 PASSWORD="admin"

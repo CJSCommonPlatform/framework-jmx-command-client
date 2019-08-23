@@ -33,6 +33,8 @@ public class CommandPrinterTest {
 
         final String commandName_1 = "commandName_1";
         final String commandName_2 = "commandName_2";
+        final String description_1 = "description_1";
+        final String description_2 = "description_2";
 
         final SystemCommand systemCommand_1 = mock(SystemCommand.class);
         final SystemCommand systemCommand_2 = mock(SystemCommand.class);
@@ -40,15 +42,17 @@ public class CommandPrinterTest {
         final List<SystemCommand> systemCommands = asList(systemCommand_1, systemCommand_2);
 
         when(systemCommand_1.getName()).thenReturn(commandName_1);
+        when(systemCommand_1.getDescription()).thenReturn(description_1);
         when(systemCommand_2.getName()).thenReturn(commandName_2);
+        when(systemCommand_2.getDescription()).thenReturn(description_2);
 
         commandPrinter.printSystemCommands(systemCommands);
 
         final InOrder inOrder = inOrder(toConsolePrinter);
 
         inOrder.verify(toConsolePrinter).printf("This instance of wildfly supports the following %d commands:", 2);
-        inOrder.verify(toConsolePrinter).printf("\t- %s", commandName_1);
-        inOrder.verify(toConsolePrinter).printf("\t- %s", commandName_2);
+        inOrder.verify(toConsolePrinter).printf("\t- %-20s%s", commandName_1 + ":", description_1);
+        inOrder.verify(toConsolePrinter).printf("\t- %-20s%s", commandName_2 + ":", description_2);
     }
 
     @Test
