@@ -22,6 +22,8 @@ public class CommandPrinter {
     }
 
     private void printCommand(final SystemCommand systemCommand) {
-        toConsolePrinter.printf("\t- %s", systemCommand.getName());
+
+        final String commandName = systemCommand.getName() + ":";
+        toConsolePrinter.printf("\t- %-20s%s", commandName, systemCommand.getDescription());
     }
 }
