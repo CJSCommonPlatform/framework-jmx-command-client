@@ -5,6 +5,10 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.0.4] 2019-08-29
+### Changed
+- Update to framework 6.0.10
+
 ## [2.0.3] 2019-08-23
 ### Changed
 - Added the description to the listing of System Commands
