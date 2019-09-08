@@ -5,6 +5,12 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.0.6] 2019-09-08
+### Changed
+- Update to framework 6.0.12
+- Improved server error handling
+- Now prints the stack trace from the server on any server error
+
 ## [2.0.5] 2019-08-30
 ### Changed
 - Update to framework 6.0.11
