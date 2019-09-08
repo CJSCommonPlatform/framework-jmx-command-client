@@ -2,11 +2,15 @@ package uk.gov.justice.framework.command.client.jmx;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
+import uk.gov.justice.services.jmx.api.SystemCommandFailedException;
+import uk.gov.justice.services.jmx.api.UnsupportedSystemCommandException;
+import uk.gov.justice.services.jmx.api.command.PingCommand;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
@@ -115,7 +119,7 @@ public class SystemCommandInvokerTest {
     }
 
     @Test
-    public void shoulLogAndReturnEmptyIfAuthenticationFails() throws Exception {
+    public void shouldLogIfAuthenticationFails() throws Exception {
 
         final String contextName = "my-context";
         final String host = "localhost";
@@ -146,5 +150,84 @@ public class SystemCommandInvokerTest {
         inOrder.verify(toConsolePrinter).printf("Connecting to %s context at '%s' on port %d", contextName, host, port);
         inOrder.verify(toConsolePrinter).printf("Connecting with credentials for user '%s'", username);
         inOrder.verify(toConsolePrinter).println("Authentication failed. Please ensure your username and password are correct");
+    }
+
+    @Test
+    public void shouldLogIfTheCommandIsUnsupported() throws Exception {
+
+        final String contextName = "secret";
+        final String host = "localhost";
+        final int port = 92834;
+        final String username = "Fred";
+
+        final UnsupportedSystemCommandException unsupportedSystemCommandException = new UnsupportedSystemCommandException("Ooops");
+
+        final SystemCommand systemCommand = new PingCommand();
+        final Credentials credentials = mock(Credentials.class);
+        final JmxParameters jmxParameters = mock(JmxParameters.class);
+        final SystemCommanderClient systemCommanderClient = mock(SystemCommanderClient.class);
+        final SystemCommanderMBean systemCommanderMBean = mock(SystemCommanderMBean.class);
+
+        when(jmxParameters.getContextName()).thenReturn(contextName);
+        when(jmxParameters.getHost()).thenReturn(host);
+        when(jmxParameters.getPort()).thenReturn(port);
+        when(jmxParameters.getCredentials()).thenReturn(of(credentials));
+        when(credentials.getUsername()).thenReturn(username);
+        when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
+        when(systemCommanderClient.getRemote(contextName)).thenReturn(systemCommanderMBean);
+        doThrow(unsupportedSystemCommandException).when(systemCommanderMBean).call(systemCommand);
+
+        systemCommandInvoker.runSystemCommand(systemCommand, jmxParameters);
+
+        final InOrder inOrder = inOrder(
+                toConsolePrinter,
+                systemCommanderClientFactory,
+                systemCommanderClient);
+
+        inOrder.verify(toConsolePrinter).printf("Connecting to %s context at '%s' on port %d", contextName, host, port);
+        inOrder.verify(toConsolePrinter).printf("Connecting with credentials for user '%s'", username);
+        inOrder.verify(toConsolePrinter).printf("Connected to %s context", contextName);
+        inOrder.verify(toConsolePrinter).printf("The command '%s' is not supported on this %s context", systemCommand.getName(), contextName);
+    }
+
+    @Test
+    public void shouldLogAndPrintTheServerStackTraceIfTheCommandFails() throws Exception {
+
+        final String contextName = "secret";
+        final String host = "localhost";
+        final int port = 92834;
+        final String username = "Fred";
+        final String serverStackTrace = "the stack trace from the server";
+        final String errorMessage = "Ooops";
+
+        final SystemCommandFailedException systemCommandFailedException = new SystemCommandFailedException(errorMessage, serverStackTrace);
+
+        final SystemCommand systemCommand = new PingCommand();
+        final Credentials credentials = mock(Credentials.class);
+        final JmxParameters jmxParameters = mock(JmxParameters.class);
+        final SystemCommanderClient systemCommanderClient = mock(SystemCommanderClient.class);
+        final SystemCommanderMBean systemCommanderMBean = mock(SystemCommanderMBean.class);
+
+        when(jmxParameters.getContextName()).thenReturn(contextName);
+        when(jmxParameters.getHost()).thenReturn(host);
+        when(jmxParameters.getPort()).thenReturn(port);
+        when(jmxParameters.getCredentials()).thenReturn(of(credentials));
+        when(credentials.getUsername()).thenReturn(username);
+        when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
+        when(systemCommanderClient.getRemote(contextName)).thenReturn(systemCommanderMBean);
+        doThrow(systemCommandFailedException).when(systemCommanderMBean).call(systemCommand);
+
+        systemCommandInvoker.runSystemCommand(systemCommand, jmxParameters);
+
+        final InOrder inOrder = inOrder(
+                toConsolePrinter,
+                systemCommanderClientFactory,
+                systemCommanderClient);
+
+        inOrder.verify(toConsolePrinter).printf("Connecting to %s context at '%s' on port %d", contextName, host, port);
+        inOrder.verify(toConsolePrinter).printf("Connecting with credentials for user '%s'", username);
+        inOrder.verify(toConsolePrinter).printf("Connected to %s context", contextName);
+        inOrder.verify(toConsolePrinter).printf("The command '%s' failed: %s", errorMessage, systemCommand.getName());
+        inOrder.verify(toConsolePrinter).println(serverStackTrace);
     }
 }

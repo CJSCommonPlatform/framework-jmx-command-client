@@ -1,6 +1,8 @@
 package uk.gov.justice.framework.command.client.jmx;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
+import uk.gov.justice.services.jmx.api.SystemCommandFailedException;
+import uk.gov.justice.services.jmx.api.UnsupportedSystemCommandException;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
@@ -41,6 +43,11 @@ public class SystemCommandInvoker {
 
         } catch (final JmxAuthenticationException e) {
             toConsolePrinter.println("Authentication failed. Please ensure your username and password are correct");
-        } 
+        } catch (final UnsupportedSystemCommandException e) {
+            toConsolePrinter.printf("The command '%s' is not supported on this %s context", commandName, contextName);
+        } catch (final SystemCommandFailedException e) {
+            toConsolePrinter.printf("The command '%s' failed: %s", e.getMessage(), commandName);
+            toConsolePrinter.println(e.getServerStackTrace());
+        }
     }
 }
