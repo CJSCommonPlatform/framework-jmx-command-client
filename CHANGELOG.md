@@ -5,6 +5,12 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.0.8] - 2019-09-19
+### Changed
+- Update to framework 6.0.15
+### Added
+- New SystemCommands ADD_TRIGGER and REMOVE_TRIGGER
+
 ## [2.0.7] - 2019-09-11
 - Update to framework 6.0.14
 
