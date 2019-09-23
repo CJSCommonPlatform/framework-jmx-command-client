@@ -5,6 +5,10 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.0.9] - 2019-09-23
+### Added
+- Result code returned : 0 - completed, 1 - authentication failed, 2 - connection failed, 3 - other failure
+
 ## [2.0.8] - 2019-09-19
 ### Changed
 - Update to framework 6.0.15

@@ -15,10 +15,8 @@ import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
 import uk.gov.justice.services.jmx.system.command.client.connection.Credentials;
-import uk.gov.justice.services.jmx.system.command.client.connection.JmxAuthenticationException;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
@@ -65,7 +63,7 @@ public class ListCommandsInvokerTest {
 
         final InOrder inOrder = inOrder(
                 toConsolePrinter,
-                systemCommanderClientFactory, 
+                systemCommanderClientFactory,
                 systemCommanderClient);
 
         inOrder.verify(toConsolePrinter).printf("Connecting to %s context at '%s' on port %d", contextName, host, port);
@@ -75,7 +73,7 @@ public class ListCommandsInvokerTest {
     }
 
     @Test
-    public void shoulLogIfUsingCredentials() throws Exception {
+    public void shouldLogIfUsingCredentials() throws Exception {
 
         final String contextName = "my-context";
         final String host = "localhost";
@@ -110,38 +108,5 @@ public class ListCommandsInvokerTest {
         inOrder.verify(systemCommanderClientFactory).create(jmxParameters);
         inOrder.verify(systemCommanderClient).getRemote(contextName);
         inOrder.verify(toConsolePrinter).printf("Connected to %s context", contextName);
-    }
-
-    @Test
-    public void shoulLogAndReturnEmptyIfAuthenticationFails() throws Exception {
-
-        final String contextName = "my-context";
-        final String host = "localhost";
-        final int port = 92834;
-        final String username = "Fred";
-
-        final JmxAuthenticationException jmxAuthenticationException = new JmxAuthenticationException("Ooops", new IOException());
-
-        final Credentials credentials = mock(Credentials.class);
-        final JmxParameters jmxParameters = mock(JmxParameters.class);
-        final SystemCommanderClient systemCommanderClient = mock(SystemCommanderClient.class);
-
-        when(jmxParameters.getContextName()).thenReturn(contextName);
-        when(jmxParameters.getHost()).thenReturn(host);
-        when(jmxParameters.getPort()).thenReturn(port);
-        when(jmxParameters.getCredentials()).thenReturn(of(credentials));
-        when(credentials.getUsername()).thenReturn(username);
-        when(systemCommanderClientFactory.create(jmxParameters)).thenThrow(jmxAuthenticationException);
-
-        assertThat(listCommandsInvoker.listSystemCommands(jmxParameters), is(empty()));
-
-        final InOrder inOrder = inOrder(
-                toConsolePrinter,
-                systemCommanderClientFactory,
-                systemCommanderClient);
-
-        inOrder.verify(toConsolePrinter).printf("Connecting to %s context at '%s' on port %d", contextName, host, port);
-        inOrder.verify(toConsolePrinter).printf("Connecting with credentials for user '%s'", username);
-        inOrder.verify(toConsolePrinter).println("Authentication failed. Please ensure your username and password are correct");
     }
 }

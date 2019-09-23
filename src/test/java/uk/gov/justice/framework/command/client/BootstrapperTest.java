@@ -1,5 +1,6 @@
 package uk.gov.justice.framework.command.client;
 
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -7,6 +8,7 @@ import static org.mockito.Mockito.when;
 import uk.gov.justice.framework.command.client.cdi.producers.WeldFactory;
 import uk.gov.justice.framework.command.client.startup.Bootstrapper;
 
+import org.hamcrest.CoreMatchers;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.jboss.weld.inject.WeldInstance;
@@ -29,7 +31,7 @@ public class BootstrapperTest {
     @Test
     public void shouldStartTheWeldCdiContainerGetTheMainApplicationClassAndRun() throws Exception {
 
-        final String[] args = { "some", "args"};
+        final String[] args = {"some", "args"};
 
         final Weld weld = mock(Weld.class);
         final WeldContainer container = mock(WeldContainer.class);
@@ -40,9 +42,11 @@ public class BootstrapperTest {
         when(weld.initialize()).thenReturn(container);
         when(container.select(MainApplication.class)).thenReturn(weldInstance);
         when(weldInstance.get()).thenReturn(mainApplication);
+        when(mainApplication.run(args)).thenReturn(0);
 
-        bootstrapper.startContainerAndRun(args);
+        final int resultCode = bootstrapper.startContainerAndRun(args);
 
+        assertThat(resultCode, CoreMatchers.is(0));
         verify(mainApplication).run(args);
     }
 }

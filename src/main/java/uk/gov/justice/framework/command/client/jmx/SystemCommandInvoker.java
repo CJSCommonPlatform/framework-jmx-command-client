@@ -41,13 +41,13 @@ public class SystemCommandInvoker {
 
             toConsolePrinter.printf("System command '%s' successfully sent to %s", commandName, contextName);
 
-        } catch (final JmxAuthenticationException e) {
-            toConsolePrinter.println("Authentication failed. Please ensure your username and password are correct");
         } catch (final UnsupportedSystemCommandException e) {
             toConsolePrinter.printf("The command '%s' is not supported on this %s context", commandName, contextName);
+            throw e;
         } catch (final SystemCommandFailedException e) {
             toConsolePrinter.printf("The command '%s' failed: %s", e.getMessage(), commandName);
             toConsolePrinter.println(e.getServerStackTrace());
+            throw e;
         }
     }
 }

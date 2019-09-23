@@ -16,10 +16,7 @@ import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
 import uk.gov.justice.services.jmx.system.command.client.connection.Credentials;
-import uk.gov.justice.services.jmx.system.command.client.connection.JmxAuthenticationException;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
-
-import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -118,41 +115,7 @@ public class SystemCommandInvokerTest {
         inOrder.verify(toConsolePrinter).printf("System command '%s' successfully sent to %s", commandName, contextName);
     }
 
-    @Test
-    public void shouldLogIfAuthenticationFails() throws Exception {
-
-        final String contextName = "my-context";
-        final String host = "localhost";
-        final int port = 92834;
-        final String username = "Fred";
-
-        final JmxAuthenticationException jmxAuthenticationException = new JmxAuthenticationException("Ooops", new IOException());
-
-        final SystemCommand systemCommand = mock(SystemCommand.class);
-        final Credentials credentials = mock(Credentials.class);
-        final JmxParameters jmxParameters = mock(JmxParameters.class);
-        final SystemCommanderClient systemCommanderClient = mock(SystemCommanderClient.class);
-
-        when(jmxParameters.getContextName()).thenReturn(contextName);
-        when(jmxParameters.getHost()).thenReturn(host);
-        when(jmxParameters.getPort()).thenReturn(port);
-        when(jmxParameters.getCredentials()).thenReturn(of(credentials));
-        when(credentials.getUsername()).thenReturn(username);
-        when(systemCommanderClientFactory.create(jmxParameters)).thenThrow(jmxAuthenticationException);
-
-        systemCommandInvoker.runSystemCommand(systemCommand, jmxParameters);
-
-        final InOrder inOrder = inOrder(
-                toConsolePrinter,
-                systemCommanderClientFactory,
-                systemCommanderClient);
-
-        inOrder.verify(toConsolePrinter).printf("Connecting to %s context at '%s' on port %d", contextName, host, port);
-        inOrder.verify(toConsolePrinter).printf("Connecting with credentials for user '%s'", username);
-        inOrder.verify(toConsolePrinter).println("Authentication failed. Please ensure your username and password are correct");
-    }
-
-    @Test
+    @Test(expected = UnsupportedSystemCommandException.class)
     public void shouldLogIfTheCommandIsUnsupported() throws Exception {
 
         final String contextName = "secret";
@@ -190,7 +153,7 @@ public class SystemCommandInvokerTest {
         inOrder.verify(toConsolePrinter).printf("The command '%s' is not supported on this %s context", systemCommand.getName(), contextName);
     }
 
-    @Test
+    @Test(expected = SystemCommandFailedException.class)
     public void shouldLogAndPrintTheServerStackTraceIfTheCommandFails() throws Exception {
 
         final String contextName = "secret";
