@@ -3,6 +3,8 @@ package uk.gov.justice.framework.command.client;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -47,6 +49,9 @@ public class MainApplicationTest {
     @Mock
     private CommandExecutor commandExecutor;
 
+    @Mock
+    private ReturnCodeFactory returnCodeFactory;
+
     @InjectMocks
     private MainApplication mainApplication;
 
@@ -67,7 +72,9 @@ public class MainApplicationTest {
         when(jmxParametersFactory.createFrom(commandLine)).thenReturn(jmxParameters);
         when(listCommandsInvoker.listSystemCommands(jmxParameters)).thenReturn(of(systemCommands));
 
-        mainApplication.run(args);
+        final int result = mainApplication.run(args);
+
+        assertThat(result, is(0));
 
         verify(commandExecutor).executeCommand(commandLine, jmxParameters, systemCommands);
         verifyZeroInteractions(formatter);
@@ -88,5 +95,27 @@ public class MainApplicationTest {
         verify(formatter).printHelp("java -jar catchup-shuttering-manager.jar", options);
 
         verifyZeroInteractions(commandExecutor);
+    }
+
+    @Test
+    public void shouldRespondWithCorrectReturnCodeOnException() {
+
+        final String[] args = {"some", "args"};
+        final JmxParameters jmxParameters = mock(JmxParameters.class);
+
+        final CommandLine commandLine = mock(CommandLine.class);
+        final RuntimeException runtimeException = new RuntimeException();
+
+        when(commandLineArgumentParser.parse(args)).thenReturn(of(commandLine));
+        when(jmxParametersFactory.createFrom(commandLine)).thenReturn(jmxParameters);
+        when(listCommandsInvoker.listSystemCommands(jmxParameters)).thenThrow(runtimeException);
+        when(returnCodeFactory.createFor(runtimeException)).thenReturn(1);
+
+        final int result = mainApplication.run(args);
+
+        assertThat(result, is(1));
+
+        verifyZeroInteractions(commandExecutor);
+        verifyZeroInteractions(formatter);
     }
 }

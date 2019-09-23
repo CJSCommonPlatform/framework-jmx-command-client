@@ -34,7 +34,10 @@ public class MainApplication {
     @Inject
     private CommandExecutor commandExecutor;
 
-    public void run(final String[] args) {
+    @Inject
+    private ReturnCodeFactory returnCodeFactory;
+
+    public int run(final String[] args) {
 
         final Optional<CommandLine> commandLineOptional = commandLineArgumentParser.parse(args);
 
@@ -44,11 +47,19 @@ public class MainApplication {
 
             final JmxParameters jmxParameters = jmxParametersFactory.createFrom(commandLine);
 
-            final Optional<List<SystemCommand>> systemCommandsOptional = listCommandsInvoker.listSystemCommands(jmxParameters);
-            systemCommandsOptional.ifPresent(systemCommands -> commandExecutor.executeCommand(commandLine, jmxParameters, systemCommands));
+            try {
+
+                final Optional<List<SystemCommand>> systemCommandsOptional = listCommandsInvoker.listSystemCommands(jmxParameters);
+                systemCommandsOptional.ifPresent(systemCommands -> commandExecutor.executeCommand(commandLine, jmxParameters, systemCommands));
+
+            } catch (final RuntimeException e) {
+                return returnCodeFactory.createFor(e);
+            }
 
         } else {
             formatter.printHelp("java -jar catchup-shuttering-manager.jar", optionsFactory.createOptions());
         }
+
+        return 0;
     }
 }

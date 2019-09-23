@@ -18,13 +18,13 @@ public class Bootstrapper {
         this.weldFactory = weldFactory;
     }
 
-    public void startContainerAndRun(final String[] args) {
+    public int startContainerAndRun(final String[] args) {
         try (final WeldContainer container = weldFactory.create().initialize()) {
 
             final WeldInstance<MainApplication> weldInstance = container.select(MainApplication.class);
             final MainApplication mainApplication = weldInstance.get();
 
-            mainApplication.run(args);
+            return mainApplication.run(args);
         }
     }
 }
