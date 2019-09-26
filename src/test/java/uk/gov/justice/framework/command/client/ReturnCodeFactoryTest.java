@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
+import uk.gov.justice.services.jmx.api.SystemCommandFailedException;
 import uk.gov.justice.services.jmx.system.command.client.MBeanClientConnectionException;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxAuthenticationException;
 
@@ -45,12 +46,25 @@ public class ReturnCodeFactoryTest {
     }
 
     @Test
-    public void shouldReturnCorrectCodeForAnyOtherException() {
+    public void shouldReturnCorrectCodeForSystemCommandFailedException() {
 
-        final int resultCode = returnCodeFactory.createFor(new Exception("Test"));
+        final int resultCode = returnCodeFactory.createFor(new SystemCommandFailedException("Test", "Stack Trace"));
 
         assertThat(resultCode, is(3));
 
-        verify(toConsolePrinter).println("Test");
+        verify(toConsolePrinter).printf("Test");
+        verify(toConsolePrinter).println("Stack Trace");
+    }
+
+    @Test
+    public void shouldReturnCorrectCodeForAnyOtherException() {
+
+        final Exception exception = new Exception("Test");
+
+        final int resultCode = returnCodeFactory.createFor(exception);
+
+        assertThat(resultCode, is(3));
+
+        verify(toConsolePrinter).println(exception);
     }
 }

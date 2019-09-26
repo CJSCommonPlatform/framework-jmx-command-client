@@ -1,6 +1,7 @@
 package uk.gov.justice.framework.command.client;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
+import uk.gov.justice.services.jmx.api.SystemCommandFailedException;
 import uk.gov.justice.services.jmx.system.command.client.MBeanClientConnectionException;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxAuthenticationException;
 
@@ -27,7 +28,13 @@ public class ReturnCodeFactory {
             return CONNECTION_FAILED;
         }
 
-        toConsolePrinter.println(exception.getMessage());
+        if (exception instanceof SystemCommandFailedException) {
+            toConsolePrinter.printf(exception.getMessage());
+            toConsolePrinter.println(((SystemCommandFailedException) exception).getServerStackTrace());
+            return EXCEPTION_OCCURRED;
+        }
+
+        toConsolePrinter.println(exception);
         return EXCEPTION_OCCURRED;
     }
 }

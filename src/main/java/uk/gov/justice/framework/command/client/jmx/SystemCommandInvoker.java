@@ -7,7 +7,6 @@ import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
-import uk.gov.justice.services.jmx.system.command.client.connection.JmxAuthenticationException;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
 
 import javax.enterprise.context.ApplicationScoped;
