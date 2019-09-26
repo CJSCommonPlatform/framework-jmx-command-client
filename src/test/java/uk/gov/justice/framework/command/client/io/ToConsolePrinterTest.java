@@ -1,7 +1,10 @@
 package uk.gov.justice.framework.command.client.io;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.Test;
@@ -39,5 +42,18 @@ public class ToConsolePrinterTest {
         toConsolePrinter.println(format);
 
         verify(printStream).println(format);
+    }
+
+    @Test
+    public void shouldPrintOutExceptionToPrintStream() {
+
+        final Exception exception = new Exception("Test Exception");
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final ToConsolePrinter toConsolePrinter = new ToConsolePrinter(new PrintStream(out));
+
+        toConsolePrinter.println(exception);
+
+        assertThat(out.toString(), containsString("java.lang.Exception: Test Exception\n" +
+                "\tat uk.gov.justice.framework.command.client.io.ToConsolePrinterTest.shouldPrintOutExceptionToPrintStream(ToConsolePrinterTest.java:"));
     }
 }

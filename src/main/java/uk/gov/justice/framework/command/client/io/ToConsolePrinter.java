@@ -18,6 +18,11 @@ public class ToConsolePrinter {
         printStream.printf(format + "\n", args);
     }
 
+    public void println(final Exception e) {
+        printStream.println(e.getMessage());
+        e.printStackTrace(printStream);
+    }
+
     public void println(final Object x) {
         printStream.println(x);
     }

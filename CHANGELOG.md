@@ -5,6 +5,10 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.0.10] - 2019-09-26
+### Added
+- Extra logging on exceptions, to output stack trace of other failure exceptions
+
 ## [2.0.9] - 2019-09-23
 ### Added
 - Result code returned : 0 - completed, 1 - authentication failed, 2 - connection failed, 3 - other failure
