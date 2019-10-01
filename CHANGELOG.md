@@ -5,6 +5,10 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.1.0] - 2019-10-01
+### Changed
+- Update to framework 6.1.1
+
 ## [2.0.10] - 2019-09-26
 ### Added
 - Extra logging on exceptions, to output stack trace of other failure exceptions
