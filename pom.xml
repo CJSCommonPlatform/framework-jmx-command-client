@@ -18,7 +18,8 @@
         <cpp.repo.name>framework-jmx-command-client</cpp.repo.name>
 
         <framework-api.version>4.1.0</framework-api.version>
-        <framework.version>6.1.1</framework.version>
+        <framework.version>6.2.0-M5</framework.version>
+        <utilities.version>1.20.1</utilities.version>
         <maven-common-bom.version>2.4.0</maven-common-bom.version>
     </properties>
 
@@ -71,6 +72,11 @@
         <dependency>
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-client-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.justice.utils</groupId>
+            <artifactId>utilities-core</artifactId>
+            <version>${utilities.version}</version>
         </dependency>
 
 
