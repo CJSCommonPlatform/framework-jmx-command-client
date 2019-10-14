@@ -1,13 +1,20 @@
 package uk.gov.justice.framework.command.client.jmx;
 
+import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_COMPLETE;
+import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_FAILED;
+
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.services.jmx.api.SystemCommandFailedException;
 import uk.gov.justice.services.jmx.api.UnsupportedSystemCommandException;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.domain.CommandState;
+import uk.gov.justice.services.jmx.api.domain.SystemCommandStatus;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
+
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,6 +24,9 @@ public class SystemCommandInvoker {
 
     @Inject
     private SystemCommanderClientFactory systemCommanderClientFactory;
+
+    @Inject
+    private CommandPoller commandPoller;
 
     @Inject
     private ToConsolePrinter toConsolePrinter;
@@ -32,13 +42,13 @@ public class SystemCommandInvoker {
         jmxParameters.getCredentials().ifPresent(credentials -> toConsolePrinter.printf("Connecting with credentials for user '%s'", credentials.getUsername()));
 
         try (final SystemCommanderClient systemCommanderClient = systemCommanderClientFactory.create(jmxParameters)) {
-            final SystemCommanderMBean systemCommanderMBean = systemCommanderClient.getRemote(contextName);
 
             toConsolePrinter.printf("Connected to %s context", contextName);
 
-            systemCommanderMBean.call(systemCommand);
-
-            toConsolePrinter.printf("System command '%s' successfully sent to %s", commandName, contextName);
+            final SystemCommanderMBean systemCommanderMBean = systemCommanderClient.getRemote(contextName);
+            final UUID commandId = systemCommanderMBean.call(systemCommand);
+            toConsolePrinter.printf("System command '%s' with id '%s' successfully sent to %s", commandName, commandId, contextName);
+            commandPoller.runUntilComplete(systemCommanderMBean, commandId, systemCommand);
 
         } catch (final UnsupportedSystemCommandException e) {
             toConsolePrinter.printf("The command '%s' is not supported on this %s context", commandName, contextName);
