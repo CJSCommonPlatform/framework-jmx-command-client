@@ -1,7 +1,12 @@
 package uk.gov.justice.framework.command.client;
 
+import static uk.gov.justice.framework.command.client.ReturnCode.AUTHENTICATION_FAILED;
+import static uk.gov.justice.framework.command.client.ReturnCode.COMMAND_FAILED;
+import static uk.gov.justice.framework.command.client.ReturnCode.CONNECTION_FAILED;
+import static uk.gov.justice.framework.command.client.ReturnCode.EXCEPTION_OCCURRED;
+
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
-import uk.gov.justice.services.jmx.api.SystemCommandFailedException;
+import uk.gov.justice.services.jmx.api.SystemCommandInvocationFailedException;
 import uk.gov.justice.services.jmx.system.command.client.MBeanClientConnectionException;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxAuthenticationException;
 
@@ -9,18 +14,15 @@ import javax.inject.Inject;
 
 public class ReturnCodeFactory {
 
-    private static final int AUTHENTICATION_CODE = 1;
-    private static final int CONNECTION_FAILED = 2;
-    private static final int EXCEPTION_OCCURRED = 3;
 
     @Inject
     private ToConsolePrinter toConsolePrinter;
 
-    public int createFor(final Exception exception) {
+    public ReturnCode createFor(final Exception exception) {
 
         if (exception instanceof JmxAuthenticationException) {
             toConsolePrinter.println("Authentication failed. Please ensure your username and password are correct");
-            return AUTHENTICATION_CODE;
+            return AUTHENTICATION_FAILED;
         }
 
         if (exception instanceof MBeanClientConnectionException) {
@@ -29,8 +31,12 @@ public class ReturnCodeFactory {
         }
 
         if (exception instanceof SystemCommandFailedException) {
+            return COMMAND_FAILED;
+        }
+
+        if (exception instanceof SystemCommandInvocationFailedException) {
             toConsolePrinter.printf(exception.getMessage());
-            toConsolePrinter.println(((SystemCommandFailedException) exception).getServerStackTrace());
+            toConsolePrinter.println(((SystemCommandInvocationFailedException) exception).getServerStackTrace());
             return EXCEPTION_OCCURRED;
         }
 

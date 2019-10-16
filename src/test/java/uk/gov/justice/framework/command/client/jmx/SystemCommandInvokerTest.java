@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
-import uk.gov.justice.services.jmx.api.SystemCommandFailedException;
+import uk.gov.justice.services.jmx.api.SystemCommandInvocationFailedException;
 import uk.gov.justice.services.jmx.api.UnsupportedSystemCommandException;
 import uk.gov.justice.services.jmx.api.command.PingCommand;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
@@ -171,7 +171,7 @@ public class SystemCommandInvokerTest {
         inOrder.verify(toConsolePrinter).printf("The command '%s' is not supported on this %s context", commandName, contextName);
     }
 
-    @Test(expected = SystemCommandFailedException.class)
+    @Test(expected = SystemCommandInvocationFailedException.class)
     public void shouldLogAndPrintTheServerStackTraceIfTheCommandFails() throws Exception {
 
         final String contextName = "secret";
@@ -183,7 +183,7 @@ public class SystemCommandInvokerTest {
         final SystemCommand systemCommand = new PingCommand();
         final String commandName = systemCommand.getName();
 
-        final SystemCommandFailedException systemCommandFailedException = new SystemCommandFailedException(errorMessage, serverStackTrace);
+        final SystemCommandInvocationFailedException systemCommandInvocationFailedException = new SystemCommandInvocationFailedException(errorMessage, serverStackTrace);
 
         final Credentials credentials = mock(Credentials.class);
         final JmxParameters jmxParameters = mock(JmxParameters.class);
@@ -197,7 +197,7 @@ public class SystemCommandInvokerTest {
         when(credentials.getUsername()).thenReturn(username);
         when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
         when(systemCommanderClient.getRemote(contextName)).thenReturn(systemCommanderMBean);
-        doThrow(systemCommandFailedException).when(systemCommanderMBean).call(systemCommand);
+        doThrow(systemCommandInvocationFailedException).when(systemCommanderMBean).call(systemCommand);
 
         systemCommandInvoker.runSystemCommand(systemCommand, jmxParameters);
 

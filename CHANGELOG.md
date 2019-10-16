@@ -4,6 +4,13 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Changed return codes to include code for command failed. New codes are
+    - 0: Success
+    - 1: Authentication Failed
+    - 2: Connection Failed
+    - 3: Command Failed
+    - 4: Exception invoking System Command/Anything else
 
 ## [2.2.1] - 2019-10-16
 ### Changed

@@ -3,9 +3,14 @@ package uk.gov.justice.framework.command.client;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static uk.gov.justice.framework.command.client.ReturnCode.AUTHENTICATION_FAILED;
+import static uk.gov.justice.framework.command.client.ReturnCode.COMMAND_FAILED;
+import static uk.gov.justice.framework.command.client.ReturnCode.CONNECTION_FAILED;
+import static uk.gov.justice.framework.command.client.ReturnCode.EXCEPTION_OCCURRED;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
-import uk.gov.justice.services.jmx.api.SystemCommandFailedException;
+import uk.gov.justice.services.jmx.api.SystemCommandInvocationFailedException;
 import uk.gov.justice.services.jmx.system.command.client.MBeanClientConnectionException;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxAuthenticationException;
 
@@ -29,18 +34,14 @@ public class ReturnCodeFactoryTest {
 
         final JmxAuthenticationException jmxAuthenticationException = new JmxAuthenticationException("Test", new Exception());
 
-        final int resultCode = returnCodeFactory.createFor(jmxAuthenticationException);
-
-        assertThat(resultCode, is(1));
+        assertThat(returnCodeFactory.createFor(jmxAuthenticationException), is(AUTHENTICATION_FAILED));
         verify(toConsolePrinter).println("Authentication failed. Please ensure your username and password are correct");
     }
 
     @Test
     public void shouldReturnCorrectCodeForMBeanClientConnectionException() {
 
-        final int resultCode = returnCodeFactory.createFor(new MBeanClientConnectionException("Test"));
-
-        assertThat(resultCode, is(2));
+        assertThat(returnCodeFactory.createFor(new MBeanClientConnectionException("Test")), is(CONNECTION_FAILED));
 
         verify(toConsolePrinter).println("Test");
     }
@@ -48,9 +49,15 @@ public class ReturnCodeFactoryTest {
     @Test
     public void shouldReturnCorrectCodeForSystemCommandFailedException() {
 
-        final int resultCode = returnCodeFactory.createFor(new SystemCommandFailedException("Test", "Stack Trace"));
+        assertThat(returnCodeFactory.createFor(new SystemCommandFailedException("Test")), is(COMMAND_FAILED));
 
-        assertThat(resultCode, is(3));
+        verifyZeroInteractions(toConsolePrinter);
+    }
+
+    @Test
+    public void shouldReturnCorrectCodeForSystemCommandInvocationFailedException() {
+
+        assertThat(returnCodeFactory.createFor(new SystemCommandInvocationFailedException("Test", "Stack Trace")), is(EXCEPTION_OCCURRED));
 
         verify(toConsolePrinter).printf("Test");
         verify(toConsolePrinter).println("Stack Trace");
@@ -61,9 +68,7 @@ public class ReturnCodeFactoryTest {
 
         final Exception exception = new Exception("Test");
 
-        final int resultCode = returnCodeFactory.createFor(exception);
-
-        assertThat(resultCode, is(3));
+        assertThat(returnCodeFactory.createFor(exception), is(EXCEPTION_OCCURRED));
 
         verify(toConsolePrinter).println(exception);
     }

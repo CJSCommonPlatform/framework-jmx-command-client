@@ -1,14 +1,15 @@
 package uk.gov.justice.framework.command.client;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.justice.framework.command.client.ReturnCode.SUCCESS;
 
 import uk.gov.justice.framework.command.client.cdi.producers.WeldFactory;
 import uk.gov.justice.framework.command.client.startup.Bootstrapper;
 
-import org.hamcrest.CoreMatchers;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.jboss.weld.inject.WeldInstance;
@@ -42,11 +43,9 @@ public class BootstrapperTest {
         when(weld.initialize()).thenReturn(container);
         when(container.select(MainApplication.class)).thenReturn(weldInstance);
         when(weldInstance.get()).thenReturn(mainApplication);
-        when(mainApplication.run(args)).thenReturn(0);
+        when(mainApplication.run(args)).thenReturn(SUCCESS);
 
-        final int resultCode = bootstrapper.startContainerAndRun(args);
-
-        assertThat(resultCode, CoreMatchers.is(0));
+        assertThat(bootstrapper.startContainerAndRun(args), is(SUCCESS));
         verify(mainApplication).run(args);
     }
 }
