@@ -3,6 +3,7 @@ package uk.gov.justice.framework.command.client.jmx;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,7 @@ import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_COMPLE
 import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_FAILED;
 import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_IN_PROGRESS;
 
+import uk.gov.justice.framework.command.client.SystemCommandFailedException;
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.framework.command.client.util.UtcClock;
 import uk.gov.justice.services.jmx.api.domain.SystemCommandStatus;
@@ -59,7 +61,7 @@ public class CommandCheckerTest {
     }
 
     @Test
-    public void shouldLogAndReturnTrueIfTheCommandFails() throws Exception {
+    public void shouldLogAndThrowExceptionfTheCommandFails() throws Exception {
 
         final UUID commandId = randomUUID();
 
@@ -77,7 +79,12 @@ public class CommandCheckerTest {
         when(systemCommandStatus.getSystemCommandName()).thenReturn("CATCHUP");
         when(systemCommandStatus.getMessage()).thenReturn(errorMessage);
 
-        assertThat(commandChecker.commandComplete(systemCommanderMBean, commandId, startTime), is(true));
+        try {
+            commandChecker.commandComplete(systemCommanderMBean, commandId, startTime);
+            fail();
+        } catch (final SystemCommandFailedException expected) {
+            assertThat(expected.getMessage(), is("Comand CATCHUP failed. CATCHUP failed with 23 errors"));
+        }
 
         verify(toConsolePrinter).println("ERROR: Command CATCHUP failed");
         verify(toConsolePrinter).println("ERROR: CATCHUP failed with 23 errors");

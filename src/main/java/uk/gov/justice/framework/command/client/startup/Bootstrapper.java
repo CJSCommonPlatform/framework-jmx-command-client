@@ -1,6 +1,7 @@
 package uk.gov.justice.framework.command.client.startup;
 
 import uk.gov.justice.framework.command.client.MainApplication;
+import uk.gov.justice.framework.command.client.ReturnCode;
 import uk.gov.justice.framework.command.client.cdi.producers.WeldFactory;
 
 import org.jboss.weld.environment.se.WeldContainer;
@@ -18,7 +19,7 @@ public class Bootstrapper {
         this.weldFactory = weldFactory;
     }
 
-    public int startContainerAndRun(final String[] args) {
+    public ReturnCode startContainerAndRun(final String[] args) {
         try (final WeldContainer container = weldFactory.create().initialize()) {
 
             final WeldInstance<MainApplication> weldInstance = container.select(MainApplication.class);

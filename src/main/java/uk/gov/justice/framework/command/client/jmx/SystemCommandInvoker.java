@@ -1,14 +1,9 @@
 package uk.gov.justice.framework.command.client.jmx;
 
-import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_COMPLETE;
-import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_FAILED;
-
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
-import uk.gov.justice.services.jmx.api.SystemCommandFailedException;
+import uk.gov.justice.services.jmx.api.SystemCommandInvocationFailedException;
 import uk.gov.justice.services.jmx.api.UnsupportedSystemCommandException;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
-import uk.gov.justice.services.jmx.api.domain.CommandState;
-import uk.gov.justice.services.jmx.api.domain.SystemCommandStatus;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
@@ -53,7 +48,7 @@ public class SystemCommandInvoker {
         } catch (final UnsupportedSystemCommandException e) {
             toConsolePrinter.printf("The command '%s' is not supported on this %s context", commandName, contextName);
             throw e;
-        } catch (final SystemCommandFailedException e) {
+        } catch (final SystemCommandInvocationFailedException e) {
             toConsolePrinter.printf("The command '%s' failed: %s", e.getMessage(), commandName);
             toConsolePrinter.println(e.getServerStackTrace());
             throw e;

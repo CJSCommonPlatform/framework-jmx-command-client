@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.time.DurationFormatUtils.formatDurationHM
 import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_COMPLETE;
 import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_FAILED;
 
+import uk.gov.justice.framework.command.client.SystemCommandFailedException;
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.framework.command.client.util.UtcClock;
 import uk.gov.justice.services.jmx.api.domain.CommandState;
@@ -46,10 +47,14 @@ public class CommandChecker {
             final long durationMillis = between(startTime, clock.now()).toMillis();
 
             final String duration = formatDurationHMS(durationMillis);
-            toConsolePrinter.println(format("ERROR: Command %s failed", commandStatus.getSystemCommandName()));
-            toConsolePrinter.println(format("ERROR: %s", commandStatus.getMessage()));
+            final String errorMessage = commandStatus.getMessage();
+            final String systemCommandName = commandStatus.getSystemCommandName();
+
+            toConsolePrinter.println(format("ERROR: Command %s failed", systemCommandName));
+            toConsolePrinter.println(format("ERROR: %s", errorMessage));
             toConsolePrinter.println(format("%s duration %s (hours:minutes:seconds:milliseconds)", commandStatus.getSystemCommandName(), duration));
-            return true;
+
+            throw new SystemCommandFailedException(format("Comand %s failed. %s", systemCommandName, errorMessage));
         }
 
         return false;

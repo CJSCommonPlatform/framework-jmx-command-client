@@ -9,6 +9,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static uk.gov.justice.framework.command.client.ReturnCode.AUTHENTICATION_FAILED;
+import static uk.gov.justice.framework.command.client.ReturnCode.SUCCESS;
 
 import uk.gov.justice.framework.command.client.cdi.producers.OptionsFactory;
 import uk.gov.justice.framework.command.client.jmx.ListCommandsInvoker;
@@ -72,9 +74,7 @@ public class MainApplicationTest {
         when(jmxParametersFactory.createFrom(commandLine)).thenReturn(jmxParameters);
         when(listCommandsInvoker.listSystemCommands(jmxParameters)).thenReturn(of(systemCommands));
 
-        final int result = mainApplication.run(args);
-
-        assertThat(result, is(0));
+        assertThat(mainApplication.run(args), is(SUCCESS));
 
         verify(commandExecutor).executeCommand(commandLine, jmxParameters, systemCommands);
         verifyZeroInteractions(formatter);
@@ -109,11 +109,9 @@ public class MainApplicationTest {
         when(commandLineArgumentParser.parse(args)).thenReturn(of(commandLine));
         when(jmxParametersFactory.createFrom(commandLine)).thenReturn(jmxParameters);
         when(listCommandsInvoker.listSystemCommands(jmxParameters)).thenThrow(runtimeException);
-        when(returnCodeFactory.createFor(runtimeException)).thenReturn(1);
+        when(returnCodeFactory.createFor(runtimeException)).thenReturn(AUTHENTICATION_FAILED);
 
-        final int result = mainApplication.run(args);
-
-        assertThat(result, is(1));
+        assertThat(mainApplication.run(args), is(AUTHENTICATION_FAILED));
 
         verifyZeroInteractions(commandExecutor);
         verifyZeroInteractions(formatter);
