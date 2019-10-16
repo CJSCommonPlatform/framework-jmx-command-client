@@ -5,6 +5,14 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.2.1] - 2019-10-16
+### Changed
+- Made local copies of UtcClock and Sleeper, as the dependency on utilities that
+these classes require confuses Weld on startup, and causes odd Class loading errors
+in the container 
+### Added
+- Main method to Bootstrapper to aid debugging
+
 ## [2.2.0] - 2019-10-15
 ### Changed
 - Update to framework 6.2.0

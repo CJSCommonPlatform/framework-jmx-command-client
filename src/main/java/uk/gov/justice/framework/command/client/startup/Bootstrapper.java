@@ -27,4 +27,23 @@ public class Bootstrapper {
             return mainApplication.run(args);
         }
     }
+
+    public static void main(String[] args) {
+
+        final String command = "PING";
+        final String contextName = "people";
+
+        final String userName = "admin";
+        final String password = "admin";
+
+
+        final String[] arguments = {
+            "-c", command,
+            "-u", userName,
+            "-pw", password,
+            "-cn", contextName
+        };
+
+        new Bootstrapper().startContainerAndRun(arguments);
+    }
 }
