@@ -19,7 +19,6 @@
 
         <framework-api.version>4.1.0</framework-api.version>
         <framework.version>6.2.0</framework.version>
-        <utilities.version>1.20.2</utilities.version>
         <maven-common-bom.version>2.4.0</maven-common-bom.version>
     </properties>
 
@@ -73,12 +72,11 @@
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-client-all</artifactId>
         </dependency>
-        <dependency>
-            <groupId>uk.gov.justice.utils</groupId>
-            <artifactId>utilities-core</artifactId>
-            <version>${utilities.version}</version>
-        </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>
