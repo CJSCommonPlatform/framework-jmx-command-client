@@ -2,7 +2,7 @@ package uk.gov.justice.framework.command.client.jmx;
 
 import static java.lang.String.format;
 import static java.time.Duration.between;
-import static org.apache.commons.lang3.time.DurationFormatUtils.formatDurationHMS;
+import static org.apache.commons.lang3.time.DurationFormatUtils.formatDuration;
 import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_COMPLETE;
 import static uk.gov.justice.services.jmx.api.domain.CommandState.COMMAND_FAILED;
 
@@ -37,22 +37,22 @@ public class CommandChecker {
             final ZonedDateTime endTime = clock.now();
             final long durationMillis = between(startTime, endTime).toMillis();
 
-            final String duration = formatDurationHMS(durationMillis);
+            final String duration = formatDuration(durationMillis, "HH:mm:ss");
             toConsolePrinter.println(format("Command %s complete", commandStatus.getSystemCommandName()));
-            toConsolePrinter.println(format("%s duration %s (hours:minutes:seconds:milliseconds)", commandStatus.getSystemCommandName(), duration));
+            toConsolePrinter.println(format("%s duration %s (hours:minutes:seconds)", commandStatus.getSystemCommandName(), duration));
             return true;
         }
 
         if(commandState == COMMAND_FAILED) {
             final long durationMillis = between(startTime, clock.now()).toMillis();
 
-            final String duration = formatDurationHMS(durationMillis);
+            final String duration = formatDuration(durationMillis, "HH:mm:ss");
             final String errorMessage = commandStatus.getMessage();
             final String systemCommandName = commandStatus.getSystemCommandName();
 
             toConsolePrinter.println(format("ERROR: Command %s failed", systemCommandName));
             toConsolePrinter.println(format("ERROR: %s", errorMessage));
-            toConsolePrinter.println(format("%s duration %s (hours:minutes:seconds:milliseconds)", commandStatus.getSystemCommandName(), duration));
+            toConsolePrinter.println(format("%s duration %s (hours:minutes:seconds)", commandStatus.getSystemCommandName(), duration));
 
             throw new SystemCommandFailedException(format("Comand %s failed. %s", systemCommandName, errorMessage));
         }

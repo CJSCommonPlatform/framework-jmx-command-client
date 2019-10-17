@@ -57,7 +57,7 @@ public class CommandCheckerTest {
         assertThat(commandChecker.commandComplete(systemCommanderMBean, commandId, startTime), is(true));
 
         verify(toConsolePrinter).println("Command CATCHUP complete");
-        verify(toConsolePrinter).println("CATCHUP duration 01:23:00.000 (hours:minutes:seconds:milliseconds)");
+        verify(toConsolePrinter).println("CATCHUP duration 01:23:00 (hours:minutes:seconds)");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class CommandCheckerTest {
 
         verify(toConsolePrinter).println("ERROR: Command CATCHUP failed");
         verify(toConsolePrinter).println("ERROR: CATCHUP failed with 23 errors");
-        verify(toConsolePrinter).println("CATCHUP duration 01:23:00.000 (hours:minutes:seconds:milliseconds)");
+        verify(toConsolePrinter).println("CATCHUP duration 01:23:00 (hours:minutes:seconds)");
     }
 
     @Test
