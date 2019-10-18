@@ -4,6 +4,8 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.2.2] - 2019-10-18
 ### Changed
 - Changed return codes to include code for command failed. New codes are
     - 0: Success
@@ -11,6 +13,7 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
     - 2: Connection Failed
     - 3: Command Failed
     - 4: Exception invoking System Command/Anything else
+- Update to framework 6.2.1    
 
 ## [2.2.1] - 2019-10-16
 ### Changed
