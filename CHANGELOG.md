@@ -5,6 +5,10 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.2.3] - 2019-10-24
+### Changed
+- Update to framework 6.2.2    
+
 ## [2.2.2] - 2019-10-18
 ### Changed
 - Changed return codes to include code for command failed. New codes are
