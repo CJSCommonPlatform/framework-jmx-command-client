@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.services.jmx.api.SystemCommandInvocationFailedException;
-import uk.gov.justice.services.jmx.api.UnsupportedSystemCommandException;
+import uk.gov.justice.services.jmx.api.UnrunnableSystemCommandException;
 import uk.gov.justice.services.jmx.api.command.PingCommand;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
@@ -131,7 +131,7 @@ public class SystemCommandInvokerTest {
         inOrder.verify(commandPoller).runUntilComplete(systemCommanderMBean, commandId, systemCommand);
     }
 
-    @Test(expected = UnsupportedSystemCommandException.class)
+    @Test(expected = UnrunnableSystemCommandException.class)
     public void shouldLogIfTheCommandIsUnsupported() throws Exception {
 
         final String contextName = "secret";
@@ -141,7 +141,7 @@ public class SystemCommandInvokerTest {
         final SystemCommand systemCommand = new PingCommand();
         final String commandName = systemCommand.getName();
 
-        final UnsupportedSystemCommandException unsupportedSystemCommandException = new UnsupportedSystemCommandException("Ooops");
+        final UnrunnableSystemCommandException unrunnableSystemCommandException = new UnrunnableSystemCommandException("Ooops");
 
         final Credentials credentials = mock(Credentials.class);
         final JmxParameters jmxParameters = mock(JmxParameters.class);
@@ -155,7 +155,7 @@ public class SystemCommandInvokerTest {
         when(credentials.getUsername()).thenReturn(username);
         when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
         when(systemCommanderClient.getRemote(contextName)).thenReturn(systemCommanderMBean);
-        doThrow(unsupportedSystemCommandException).when(systemCommanderMBean).call(systemCommand);
+        doThrow(unrunnableSystemCommandException).when(systemCommanderMBean).call(systemCommand);
 
         systemCommandInvoker.runSystemCommand(systemCommand, jmxParameters);
 
