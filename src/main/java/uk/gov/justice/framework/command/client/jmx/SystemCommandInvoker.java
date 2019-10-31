@@ -2,7 +2,7 @@ package uk.gov.justice.framework.command.client.jmx;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.services.jmx.api.SystemCommandInvocationFailedException;
-import uk.gov.justice.services.jmx.api.UnsupportedSystemCommandException;
+import uk.gov.justice.services.jmx.api.UnrunnableSystemCommandException;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
@@ -45,7 +45,7 @@ public class SystemCommandInvoker {
             toConsolePrinter.printf("System command '%s' with id '%s' successfully sent to %s", commandName, commandId, contextName);
             commandPoller.runUntilComplete(systemCommanderMBean, commandId, systemCommand);
 
-        } catch (final UnsupportedSystemCommandException e) {
+        } catch (final UnrunnableSystemCommandException e) {
             toConsolePrinter.printf("The command '%s' is not supported on this %s context", commandName, contextName);
             throw e;
         } catch (final SystemCommandInvocationFailedException e) {
