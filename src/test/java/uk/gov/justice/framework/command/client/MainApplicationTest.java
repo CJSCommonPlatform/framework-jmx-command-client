@@ -16,6 +16,7 @@ import uk.gov.justice.framework.command.client.cdi.producers.OptionsFactory;
 import uk.gov.justice.framework.command.client.jmx.ListCommandsInvoker;
 import uk.gov.justice.framework.command.client.startup.CommandLineArgumentParser;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommandDetails;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
 
 import java.util.List;
@@ -65,10 +66,10 @@ public class MainApplicationTest {
         final JmxParameters jmxParameters = mock(JmxParameters.class);
 
         final CommandLine commandLine = mock(CommandLine.class);
-        final SystemCommand systemCommand_1 = mock(SystemCommand.class);
-        final SystemCommand systemCommand_2 = mock(SystemCommand.class);
+        final SystemCommandDetails systemCommandDetails_1 = mock(SystemCommandDetails.class);
+        final SystemCommandDetails systemCommandDetails_2 = mock(SystemCommandDetails.class);
 
-        final List<SystemCommand> systemCommands = asList(systemCommand_1, systemCommand_2);
+        final List<SystemCommandDetails> systemCommands = asList(systemCommandDetails_1, systemCommandDetails_2);
 
         when(commandLineArgumentParser.parse(args)).thenReturn(of(commandLine));
         when(jmxParametersFactory.createFrom(commandLine)).thenReturn(jmxParameters);

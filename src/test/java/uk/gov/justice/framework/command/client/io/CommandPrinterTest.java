@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommandDetails;
 
 import java.util.List;
 
@@ -36,15 +37,15 @@ public class CommandPrinterTest {
         final String description_1 = "description_1";
         final String description_2 = "description_2";
 
-        final SystemCommand systemCommand_1 = mock(SystemCommand.class);
-        final SystemCommand systemCommand_2 = mock(SystemCommand.class);
+        final SystemCommandDetails systemCommandDetails_1 = mock(SystemCommandDetails.class);
+        final SystemCommandDetails systemCommandDetails_2 = mock(SystemCommandDetails.class);
 
-        final List<SystemCommand> systemCommands = asList(systemCommand_1, systemCommand_2);
+        final List<SystemCommandDetails> systemCommands = asList(systemCommandDetails_1, systemCommandDetails_2);
 
-        when(systemCommand_1.getName()).thenReturn(commandName_1);
-        when(systemCommand_1.getDescription()).thenReturn(description_1);
-        when(systemCommand_2.getName()).thenReturn(commandName_2);
-        when(systemCommand_2.getDescription()).thenReturn(description_2);
+        when(systemCommandDetails_1.getName()).thenReturn(commandName_1);
+        when(systemCommandDetails_1.getDescription()).thenReturn(description_1);
+        when(systemCommandDetails_2.getName()).thenReturn(commandName_2);
+        when(systemCommandDetails_2.getDescription()).thenReturn(description_2);
 
         commandPrinter.printSystemCommands(systemCommands);
 

@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
-import uk.gov.justice.services.jmx.api.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommandDetails;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
@@ -45,7 +45,7 @@ public class ListCommandsInvokerTest {
         final String host = "localhost";
         final int port = 92834;
 
-        final List<SystemCommand> systemCommands = singletonList(mock(SystemCommand.class));
+        final List<SystemCommandDetails> systemCommandDetails = singletonList(mock(SystemCommandDetails.class));
 
         final JmxParameters jmxParameters = mock(JmxParameters.class);
         final SystemCommanderClient systemCommanderClient = mock(SystemCommanderClient.class);
@@ -57,9 +57,9 @@ public class ListCommandsInvokerTest {
         when(jmxParameters.getCredentials()).thenReturn(empty());
         when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
         when(systemCommanderClient.getRemote(contextName)).thenReturn(commanderMBean);
-        when(commanderMBean.listCommands()).thenReturn(systemCommands);
+        when(commanderMBean.listCommands()).thenReturn(systemCommandDetails);
 
-        assertThat(listCommandsInvoker.listSystemCommands(jmxParameters), is(of(systemCommands)));
+        assertThat(listCommandsInvoker.listSystemCommands(jmxParameters), is(of(systemCommandDetails)));
 
         final InOrder inOrder = inOrder(
                 toConsolePrinter,
@@ -80,7 +80,7 @@ public class ListCommandsInvokerTest {
         final int port = 92834;
         final String username = "Fred";
 
-        final List<SystemCommand> systemCommands = singletonList(mock(SystemCommand.class));
+        final List<SystemCommandDetails> systemCommandDetails = singletonList(mock(SystemCommandDetails.class));
 
         final Credentials credentials = mock(Credentials.class);
         final JmxParameters jmxParameters = mock(JmxParameters.class);
@@ -94,9 +94,9 @@ public class ListCommandsInvokerTest {
         when(credentials.getUsername()).thenReturn(username);
         when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
         when(systemCommanderClient.getRemote(contextName)).thenReturn(commanderMBean);
-        when(commanderMBean.listCommands()).thenReturn(systemCommands);
+        when(commanderMBean.listCommands()).thenReturn(systemCommandDetails);
 
-        assertThat(listCommandsInvoker.listSystemCommands(jmxParameters), is(of(systemCommands)));
+        assertThat(listCommandsInvoker.listSystemCommands(jmxParameters), is(of(systemCommandDetails)));
 
         final InOrder inOrder = inOrder(
                 toConsolePrinter,

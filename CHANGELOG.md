@@ -5,6 +5,12 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.3.0] - 2019-11-07
+### Changed
+- Update to framework 6.3.0
+- All commands are now called using their String command name to allow for new commands to be
+added without needing to update the dependency on framework
+
 ## [2.2.4] - 2019-10-31
 ### Changed
 - Update to framework 6.2.3    

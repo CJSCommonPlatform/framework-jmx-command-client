@@ -28,7 +28,7 @@ public class CommandPoller {
     @Inject
     private ToConsolePrinter toConsolePrinter;
 
-    public void runUntilComplete(final SystemCommanderMBean systemCommanderMBean, final UUID commandId, final SystemCommand systemCommand) {
+    public void runUntilComplete(final SystemCommanderMBean systemCommanderMBean, final UUID commandId, final String commandName) {
 
         final ZonedDateTime startTime = clock.now();
 
@@ -39,7 +39,7 @@ public class CommandPoller {
 
             if (count % 10 == 0) {
                 final long seconds = between(startTime, clock.now()).getSeconds();
-                toConsolePrinter.println(format("%s running for %d seconds", systemCommand.getName(), seconds));
+                toConsolePrinter.println(format("%s running for %d seconds", commandName, seconds));
             }
         }
     }
