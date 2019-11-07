@@ -1,6 +1,6 @@
 package uk.gov.justice.framework.command.client.io;
 
-import uk.gov.justice.services.jmx.api.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommandDetails;
 
 import java.util.List;
 
@@ -11,19 +11,19 @@ public class CommandPrinter {
     @Inject
     private ToConsolePrinter toConsolePrinter;
 
-    public void printSystemCommands(final List<SystemCommand> commands) {
+    public void printSystemCommands(final List<SystemCommandDetails> systemCommandDetails) {
 
-        if (commands.isEmpty()) {
+        if (systemCommandDetails.isEmpty()) {
             toConsolePrinter.println("This instance of wildfly does not support any system commands");
         }
 
-        toConsolePrinter.printf("This instance of wildfly supports the following %d commands:", commands.size());
-        commands.forEach(this::printCommand);
+        toConsolePrinter.printf("This instance of wildfly supports the following %d commands:", systemCommandDetails.size());
+        systemCommandDetails.forEach(this::printCommand);
     }
 
-    private void printCommand(final SystemCommand systemCommand) {
+    private void printCommand(final SystemCommandDetails systemCommandDetails) {
 
-        final String commandName = systemCommand.getName() + ":";
-        toConsolePrinter.printf("\t- %-20s%s", commandName, systemCommand.getDescription());
+        final String commandName = systemCommandDetails.getName() + ":";
+        toConsolePrinter.printf("\t- %-20s%s", commandName, systemCommandDetails.getDescription());
     }
 }

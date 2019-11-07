@@ -6,6 +6,7 @@ import uk.gov.justice.framework.command.client.cdi.producers.OptionsFactory;
 import uk.gov.justice.framework.command.client.jmx.ListCommandsInvoker;
 import uk.gov.justice.framework.command.client.startup.CommandLineArgumentParser;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommandDetails;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class MainApplication {
 
             try {
 
-                final Optional<List<SystemCommand>> systemCommandsOptional = listCommandsInvoker.listSystemCommands(jmxParameters);
+                final Optional<List<SystemCommandDetails>> systemCommandsOptional = listCommandsInvoker.listSystemCommands(jmxParameters);
                 systemCommandsOptional.ifPresent(systemCommands -> commandExecutor.executeCommand(commandLine, jmxParameters, systemCommands));
 
             } catch (final RuntimeException e) {

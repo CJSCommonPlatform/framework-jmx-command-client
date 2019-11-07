@@ -4,6 +4,7 @@ import static java.util.Optional.of;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommandDetails;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClient;
 import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFactory;
@@ -24,7 +25,7 @@ public class ListCommandsInvoker {
     @Inject
     private ToConsolePrinter toConsolePrinter;
 
-    public Optional<List<SystemCommand>> listSystemCommands(final JmxParameters jmxParameters) {
+    public Optional<List<SystemCommandDetails>> listSystemCommands(final JmxParameters jmxParameters) {
 
         final String contextName = jmxParameters.getContextName();
 

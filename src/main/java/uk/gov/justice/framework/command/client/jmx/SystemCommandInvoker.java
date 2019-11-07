@@ -26,9 +26,8 @@ public class SystemCommandInvoker {
     @Inject
     private ToConsolePrinter toConsolePrinter;
 
-    public void runSystemCommand(final SystemCommand systemCommand, final JmxParameters jmxParameters) {
+    public void runSystemCommand(final String commandName, final JmxParameters jmxParameters) {
 
-        final String commandName = systemCommand.getName();
         final String contextName = jmxParameters.getContextName();
 
         toConsolePrinter.printf("Running system command '%s'", commandName);
@@ -41,9 +40,9 @@ public class SystemCommandInvoker {
             toConsolePrinter.printf("Connected to %s context", contextName);
 
             final SystemCommanderMBean systemCommanderMBean = systemCommanderClient.getRemote(contextName);
-            final UUID commandId = systemCommanderMBean.call(systemCommand);
+            final UUID commandId = systemCommanderMBean.call(commandName);
             toConsolePrinter.printf("System command '%s' with id '%s' successfully sent to %s", commandName, commandId, contextName);
-            commandPoller.runUntilComplete(systemCommanderMBean, commandId, systemCommand);
+            commandPoller.runUntilComplete(systemCommanderMBean, commandId, commandName);
 
         } catch (final UnrunnableSystemCommandException e) {
             toConsolePrinter.printf("The command '%s' is not supported on this %s context", commandName, contextName);

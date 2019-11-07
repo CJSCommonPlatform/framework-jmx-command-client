@@ -12,6 +12,7 @@ import uk.gov.justice.framework.command.client.io.CommandPrinter;
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.framework.command.client.jmx.SystemCommandInvoker;
 import uk.gov.justice.services.jmx.api.command.SystemCommand;
+import uk.gov.justice.services.jmx.api.command.SystemCommandDetails;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
 
 import java.util.List;
@@ -31,9 +32,6 @@ public class CommandExecutorTest {
     private SystemCommandInvoker systemCommandInvoker;
 
     @Mock
-    private CommandLocator commandLocator;
-
-    @Mock
     private ToConsolePrinter toConsolePrinter;
 
     @Mock
@@ -47,54 +45,30 @@ public class CommandExecutorTest {
 
         final String commandName = "CATCHUP";
 
-        final SystemCommand systemCommand_1 = mock(SystemCommand.class);
-        final SystemCommand systemCommand_2 = mock(SystemCommand.class);
+        final SystemCommandDetails systemCommandDetails_1 = mock(SystemCommandDetails.class);
+        final SystemCommandDetails systemCommandDetails_2 = mock(SystemCommandDetails.class);
 
         final CommandLine commandLine = mock(CommandLine.class);
         final JmxParameters jmxParameters = mock(JmxParameters.class);
-        final List<SystemCommand> systemCommands = asList(systemCommand_1, systemCommand_2);
+        final List<SystemCommandDetails> systemCommands = asList(systemCommandDetails_1, systemCommandDetails_2);
 
         when(commandLine.hasOption("list")).thenReturn(false);
         when(commandLine.getOptionValue("command")).thenReturn(commandName);
-        when(commandLocator.lookupCommand(commandName, systemCommands)).thenReturn(of(systemCommand_2));
 
         commandExecutor.executeCommand(commandLine, jmxParameters, systemCommands);
 
-        verify(systemCommandInvoker).runSystemCommand(systemCommand_2, jmxParameters);
-    }
-
-    @Test
-    public void shouldPrintErrorAndListOfSystemCommandsIfTheNoCommandFound() throws Exception {
-
-        final String commandName = "CATCHUP";
-
-        final SystemCommand systemCommand_1 = mock(SystemCommand.class);
-        final SystemCommand systemCommand_2 = mock(SystemCommand.class);
-
-        final CommandLine commandLine = mock(CommandLine.class);
-        final JmxParameters jmxParameters = mock(JmxParameters.class);
-        final List<SystemCommand> systemCommands = asList(systemCommand_1, systemCommand_2);
-
-        when(commandLine.hasOption("list")).thenReturn(false);
-        when(commandLine.getOptionValue("command")).thenReturn(commandName);
-        when(commandLocator.lookupCommand(commandName, systemCommands)).thenReturn(empty());
-
-        commandExecutor.executeCommand(commandLine, jmxParameters, systemCommands);
-
-        verify(toConsolePrinter).printf("No command found with name '%s'", commandName);
-        verify(commandPrinter).printSystemCommands(systemCommands);
-        verifyZeroInteractions(systemCommandInvoker);
+        verify(systemCommandInvoker).runSystemCommand(commandName, jmxParameters);
     }
 
     @Test
     public void shouldListSystemCommandsIfCommandLineOptionIsList() throws Exception {
 
-        final SystemCommand systemCommand_1 = mock(SystemCommand.class);
-        final SystemCommand systemCommand_2 = mock(SystemCommand.class);
+        final SystemCommandDetails systemCommandDetails_1 = mock(SystemCommandDetails.class);
+        final SystemCommandDetails systemCommandDetails_2 = mock(SystemCommandDetails.class);
 
         final CommandLine commandLine = mock(CommandLine.class);
         final JmxParameters jmxParameters = mock(JmxParameters.class);
-        final List<SystemCommand> systemCommands = asList(systemCommand_1, systemCommand_2);
+        final List<SystemCommandDetails> systemCommands = asList(systemCommandDetails_1, systemCommandDetails_2);
 
         when(commandLine.hasOption("list")).thenReturn(true);
 

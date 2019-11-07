@@ -9,8 +9,6 @@ import static org.mockito.Mockito.when;
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.framework.command.client.util.Sleeper;
 import uk.gov.justice.framework.command.client.util.UtcClock;
-import uk.gov.justice.services.jmx.api.command.EventCatchupCommand;
-import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 
 import java.time.ZonedDateTime;
@@ -44,7 +42,7 @@ public class CommandPollerTest {
     public void shouldCheckCommandUntilComplete() throws Exception {
 
         final UUID commandId = UUID.randomUUID();
-        final SystemCommand systemCommand = new EventCatchupCommand();
+        final String commandName = "CATCHUP";
 
         final ZonedDateTime startTime = new UtcClock().now();
 
@@ -53,7 +51,7 @@ public class CommandPollerTest {
         when(clock.now()).thenReturn(startTime);
         when(commandChecker.commandComplete(systemCommanderMBean, commandId, startTime)).thenReturn(false, false, true);
 
-        commandPoller.runUntilComplete(systemCommanderMBean, commandId, systemCommand);
+        commandPoller.runUntilComplete(systemCommanderMBean, commandId, commandName);
 
         verify(sleeper, times(2)).sleepFor(1_000);
         verifyZeroInteractions(toConsolePrinter);
@@ -63,7 +61,7 @@ public class CommandPollerTest {
     public void shouldLogProgressEveryTenthCall() throws Exception {
 
         final UUID commandId = UUID.randomUUID();
-        final SystemCommand systemCommand = new EventCatchupCommand();
+        final String commandName = "CATCHUP";
 
         final ZonedDateTime startTime = new UtcClock().now();
         final ZonedDateTime now = startTime.plusSeconds(10);
@@ -73,7 +71,7 @@ public class CommandPollerTest {
         when(clock.now()).thenReturn(startTime, now);
         when(commandChecker.commandComplete(systemCommanderMBean, commandId, startTime)).thenReturn(false, false, false, false, false, false, false, false, false, false, true);
 
-        commandPoller.runUntilComplete(systemCommanderMBean, commandId, systemCommand);
+        commandPoller.runUntilComplete(systemCommanderMBean, commandId, commandName);
 
         verify(sleeper, times(10)).sleepFor(1_000);
         verify(toConsolePrinter).println("CATCHUP running for 10 seconds");
