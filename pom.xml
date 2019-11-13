@@ -18,7 +18,7 @@
         <cpp.repo.name>framework-jmx-command-client</cpp.repo.name>
 
         <framework-api.version>4.1.0</framework-api.version>
-        <framework.version>6.3.0</framework.version>
+        <framework.version>6.4.0</framework.version>
         <maven-common-bom.version>2.4.0</maven-common-bom.version>
     </properties>
 
