@@ -42,6 +42,7 @@ public class CommandCheckerTest {
     public void shouldLogAndReturnTrueIfTheCommandIsComplete() throws Exception {
 
         final UUID commandId = randomUUID();
+        final String message = "Woo hoo it worked";
 
         final ZonedDateTime startTime = new UtcClock().now();
         final ZonedDateTime endedAt = startTime.plusMinutes(83);
@@ -53,15 +54,17 @@ public class CommandCheckerTest {
         when(systemCommanderMBean.getCommandStatus(commandId)).thenReturn(systemCommandStatus);
         when(systemCommandStatus.getCommandState()).thenReturn(COMMAND_COMPLETE);
         when(systemCommandStatus.getSystemCommandName()).thenReturn("CATCHUP");
+        when(systemCommandStatus.getMessage()).thenReturn(message);
 
         assertThat(commandChecker.commandComplete(systemCommanderMBean, commandId, startTime), is(true));
 
+        verify(toConsolePrinter).println(message);
         verify(toConsolePrinter).println("Command CATCHUP complete");
         verify(toConsolePrinter).println("CATCHUP duration 01:23:00 (hours:minutes:seconds)");
     }
 
     @Test
-    public void shouldLogAndThrowExceptionfTheCommandFails() throws Exception {
+    public void shouldLogAndThrowExceptionIfTheCommandFails() throws Exception {
 
         final UUID commandId = randomUUID();
 
