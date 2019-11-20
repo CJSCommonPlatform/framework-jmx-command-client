@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>framework-jmx-command-client</artifactId>
-    <version>2.4.1-SNAPSHOT</version>
+    <version>2.4.1</version>
 
     <properties>
         <cpp.repo.name>framework-jmx-command-client</cpp.repo.name>
