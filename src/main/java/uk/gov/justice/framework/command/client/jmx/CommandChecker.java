@@ -37,6 +37,8 @@ public class CommandChecker {
             final ZonedDateTime endTime = clock.now();
             final long durationMillis = between(startTime, endTime).toMillis();
 
+            toConsolePrinter.println(commandStatus.getMessage());
+
             final String duration = formatDuration(durationMillis, "HH:mm:ss");
             toConsolePrinter.println(format("Command %s complete", commandStatus.getSystemCommandName()));
             toConsolePrinter.println(format("%s duration %s (hours:minutes:seconds)", commandStatus.getSystemCommandName(), duration));
