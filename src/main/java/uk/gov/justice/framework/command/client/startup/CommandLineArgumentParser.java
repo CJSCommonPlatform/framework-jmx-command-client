@@ -33,11 +33,11 @@ public class CommandLineArgumentParser {
         try {
             final CommandLine commandLine = basicParser.parse(optionsFactory.createOptions(), args);
 
-            if (commandLine.hasOption("command") || commandLine.hasOption("list")) {
+            if (commandLine.hasOption("command") || commandLine.hasOption("attach") || commandLine.hasOption("list")) {
                 return of(commandLine);
             }
 
-            toConsolePrinter.println("No system command specifed.");
+            toConsolePrinter.println("No system command specified.");
 
             return empty();
 

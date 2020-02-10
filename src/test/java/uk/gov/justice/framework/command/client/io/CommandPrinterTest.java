@@ -8,7 +8,6 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.api.command.SystemCommandDetails;
 
 import java.util.List;

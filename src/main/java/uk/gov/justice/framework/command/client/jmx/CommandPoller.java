@@ -2,11 +2,11 @@ package uk.gov.justice.framework.command.client.jmx;
 
 import static java.lang.String.format;
 import static java.time.Duration.between;
+import static org.apache.commons.lang3.time.DurationFormatUtils.formatDuration;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
 import uk.gov.justice.framework.command.client.util.Sleeper;
 import uk.gov.justice.framework.command.client.util.UtcClock;
-import uk.gov.justice.services.jmx.api.command.SystemCommand;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
 
 import java.time.ZonedDateTime;
@@ -28,9 +28,11 @@ public class CommandPoller {
     @Inject
     private ToConsolePrinter toConsolePrinter;
 
-    public void runUntilComplete(final SystemCommanderMBean systemCommanderMBean, final UUID commandId, final String commandName) {
+    public void runUntilComplete(final SystemCommanderMBean systemCommanderMBean, final RunContext runContext) {
 
-        final ZonedDateTime startTime = clock.now();
+        final UUID commandId = runContext.getCommandId();
+        final String commandName = runContext.getCommandName();
+        final ZonedDateTime startTime = runContext.getStartTime();
 
         int count = 0;
         while (! commandChecker.commandComplete(systemCommanderMBean, commandId, startTime)) {
@@ -38,10 +40,12 @@ public class CommandPoller {
             count++;
 
             if (count % 10 == 0) {
-                final long seconds = between(startTime, clock.now()).getSeconds();
-                toConsolePrinter.println(format("%s running for %d seconds", commandName, seconds));
+                final long durationMillis = between(startTime, clock.now()).toMillis();
+
+                final String duration = formatDuration(durationMillis, "HH:mm:ss");
+
+                toConsolePrinter.println(format("%s running for %s (hh:mm:ss)", commandName, duration));
             }
         }
     }
-
 }

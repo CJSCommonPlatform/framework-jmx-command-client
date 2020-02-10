@@ -4,6 +4,8 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+JMX client can now attach to a running command by using the command line switch '--attach <command id>' 
 
 ## [2.4.1] - 2019-11-20
 ### Fixed
