@@ -5,6 +5,10 @@ on [Keep a CHANGELOG](http://keepachangelog.com/). This project adheres to
 
 ## [Unreleased]
 
+## [2.4.2] - 2020-04-09
+### Changed
+- microservice-framework -> 6.4.1
+
 ## [2.4.1] - 2019-11-20
 ### Fixed
 - Successful runs of a command now logs the success message from the server
