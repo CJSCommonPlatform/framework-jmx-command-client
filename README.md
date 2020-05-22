@@ -1,5 +1,14 @@
 # Framework Jmx Command Client
 
+
+## Deprecated
+
+_**This project has moved to be a sub-module of [Microservice Framework](https://github.com/CJSCommonPlatform/microservice-framework)**_
+
+_**Pull requests against this project have been disabled. Please contact one of the project owners for emergency bug fixes on this version**_
+
+---
+
 [![Build Status](https://travis-ci.org/CJSCommonPlatform/framework-jmx-command-client.svg?branch=master)](https://travis-ci.org/CJSCommonPlatform/framework-jmx-command-client) [![Coverage Status](https://coveralls.io/repos/github/CJSCommonPlatform/framework-jmx-command-client/badge.svg?branch=master)](https://coveralls.io/github/CJSCommonPlatform/framework-jmx-command-client?branch=master)
 
 Command line client tool for running Framework System Commands against any framework based context.
