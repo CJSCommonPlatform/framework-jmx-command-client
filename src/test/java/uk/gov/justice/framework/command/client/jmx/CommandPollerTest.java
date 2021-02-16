@@ -43,15 +43,20 @@ public class CommandPollerTest {
 
         final UUID commandId = UUID.randomUUID();
         final String commandName = "CATCHUP";
-
         final ZonedDateTime startTime = new UtcClock().now();
+
+        final RunContext runContext = new RunContext(
+                commandId,
+                commandName,
+                startTime
+        );
 
         final SystemCommanderMBean systemCommanderMBean = mock(SystemCommanderMBean.class);
 
         when(clock.now()).thenReturn(startTime);
         when(commandChecker.commandComplete(systemCommanderMBean, commandId, startTime)).thenReturn(false, false, true);
 
-        commandPoller.runUntilComplete(systemCommanderMBean, commandId, commandName);
+        commandPoller.runUntilComplete(systemCommanderMBean, runContext);
 
         verify(sleeper, times(2)).sleepFor(1_000);
         verifyZeroInteractions(toConsolePrinter);
@@ -62,18 +67,24 @@ public class CommandPollerTest {
 
         final UUID commandId = UUID.randomUUID();
         final String commandName = "CATCHUP";
-
         final ZonedDateTime startTime = new UtcClock().now();
+
+        final RunContext runContext = new RunContext(
+                commandId,
+                commandName,
+                startTime
+        );
+
         final ZonedDateTime now = startTime.plusSeconds(10);
 
         final SystemCommanderMBean systemCommanderMBean = mock(SystemCommanderMBean.class);
 
-        when(clock.now()).thenReturn(startTime, now);
+        when(clock.now()).thenReturn(now);
         when(commandChecker.commandComplete(systemCommanderMBean, commandId, startTime)).thenReturn(false, false, false, false, false, false, false, false, false, false, true);
 
-        commandPoller.runUntilComplete(systemCommanderMBean, commandId, commandName);
+        commandPoller.runUntilComplete(systemCommanderMBean, runContext);
 
         verify(sleeper, times(10)).sleepFor(1_000);
-        verify(toConsolePrinter).println("CATCHUP running for 10 seconds");
+        verify(toConsolePrinter).println("CATCHUP running for 00:00:10 (hh:mm:ss)");
     }
 }

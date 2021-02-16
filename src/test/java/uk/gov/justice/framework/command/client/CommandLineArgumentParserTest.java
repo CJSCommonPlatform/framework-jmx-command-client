@@ -48,6 +48,29 @@ public class CommandLineArgumentParserTest {
         when(optionsFactory.createOptions()).thenReturn(options);
         when(basicParser.parse(options, args)).thenReturn(commandLine);
         when(commandLine.hasOption("command")).thenReturn(true);
+        when(commandLine.hasOption("attach")).thenReturn(false);
+        when(commandLine.hasOption("list")).thenReturn(false);
+
+        final Optional<CommandLine> commandLineOptional = commandLineArgumentParser.parse(args);
+
+        if (commandLineOptional.isPresent()) {
+            assertThat(commandLineOptional.get(), is(commandLine));
+        } else {
+            fail();
+        }
+    }
+
+    @Test
+    public void shouldParseTheCommandLineArgumentsAndReturnTheCommandLineObjectIfAttachIsSpecified() throws Exception {
+
+        final String[] args = {"some", "args"};
+        final CommandLine commandLine = mock(CommandLine.class);
+        final Options options = mock(Options.class);
+
+        when(optionsFactory.createOptions()).thenReturn(options);
+        when(basicParser.parse(options, args)).thenReturn(commandLine);
+        when(commandLine.hasOption("command")).thenReturn(false);
+        when(commandLine.hasOption("attach")).thenReturn(true);
         when(commandLine.hasOption("list")).thenReturn(false);
 
         final Optional<CommandLine> commandLineOptional = commandLineArgumentParser.parse(args);
@@ -69,6 +92,7 @@ public class CommandLineArgumentParserTest {
         when(optionsFactory.createOptions()).thenReturn(options);
         when(basicParser.parse(optionsFactory.createOptions(), args)).thenReturn(commandLine);
         when(commandLine.hasOption("command")).thenReturn(false);
+        when(commandLine.hasOption("attach")).thenReturn(false);
         when(commandLine.hasOption("list")).thenReturn(true);
 
         final Optional<CommandLine> commandLineOptional = commandLineArgumentParser.parse(args);
@@ -90,13 +114,14 @@ public class CommandLineArgumentParserTest {
         when(optionsFactory.createOptions()).thenReturn(options);
         when(basicParser.parse(optionsFactory.createOptions(), args)).thenReturn(commandLine);
         when(commandLine.hasOption("command")).thenReturn(false);
+        when(commandLine.hasOption("attach")).thenReturn(false);
         when(commandLine.hasOption("list")).thenReturn(false);
 
         final Optional<CommandLine> commandLineOptional = commandLineArgumentParser.parse(args);
 
         assertThat(commandLineOptional.isPresent(), is(false));
 
-        verify(toConsolePrinter).println("No system command specifed.");
+        verify(toConsolePrinter).println("No system command specified.");
     }
 
     @Test

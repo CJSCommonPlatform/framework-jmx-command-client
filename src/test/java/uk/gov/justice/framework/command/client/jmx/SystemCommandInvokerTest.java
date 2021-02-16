@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import uk.gov.justice.framework.command.client.io.ToConsolePrinter;
+import uk.gov.justice.framework.command.client.util.UtcClock;
 import uk.gov.justice.services.jmx.api.SystemCommandInvocationFailedException;
 import uk.gov.justice.services.jmx.api.UnrunnableSystemCommandException;
 import uk.gov.justice.services.jmx.api.mbean.SystemCommanderMBean;
@@ -17,6 +18,7 @@ import uk.gov.justice.services.jmx.system.command.client.SystemCommanderClientFa
 import uk.gov.justice.services.jmx.system.command.client.connection.Credentials;
 import uk.gov.justice.services.jmx.system.command.client.connection.JmxParameters;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -38,17 +40,27 @@ public class SystemCommandInvokerTest {
     @Mock
     private ToConsolePrinter toConsolePrinter;
 
+    @Mock
+    private UtcClock clock;
+
     @InjectMocks
     private SystemCommandInvoker systemCommandInvoker;
 
     @Test
-    public void shouldMakeJmxCallToRetrieveTheListOfCommands() throws Exception {
+    public void shouldInvokeSystemCommand() throws Exception {
 
         final String contextName = "my-context";
         final String host = "localhost";
         final int port = 92834;
         final String commandName = "SOME_COMMAND";
         final UUID commandId = randomUUID();
+        final ZonedDateTime startTime = new UtcClock().now();
+
+        final RunContext runContext = new RunContext(
+                commandId,
+                commandName,
+                startTime
+        );
 
         final JmxParameters jmxParameters = mock(JmxParameters.class);
         final SystemCommanderClient systemCommanderClient = mock(SystemCommanderClient.class);
@@ -61,6 +73,7 @@ public class SystemCommandInvokerTest {
         when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
         when(systemCommanderClient.getRemote(contextName)).thenReturn(systemCommanderMBean);
         when(systemCommanderMBean.call(commandName)).thenReturn(commandId);
+        when(clock.now()).thenReturn(startTime);
 
         systemCommandInvoker.runSystemCommand(commandName, jmxParameters);
 
@@ -78,7 +91,7 @@ public class SystemCommandInvokerTest {
         inOrder.verify(systemCommanderClient).getRemote(contextName);
         inOrder.verify(systemCommanderMBean).call(commandName);
         inOrder.verify(toConsolePrinter).printf("System command '%s' with id '%s' successfully sent to %s", commandName, commandId, contextName);
-        inOrder.verify(commandPoller).runUntilComplete(systemCommanderMBean, commandId, commandName);
+        inOrder.verify(commandPoller).runUntilComplete(systemCommanderMBean, runContext);
     }
 
     @Test
@@ -90,6 +103,13 @@ public class SystemCommandInvokerTest {
         final int port = 92834;
         final String commandName = "SOME_COMMAND";
         final UUID commandId = randomUUID();
+        final ZonedDateTime startTime = new UtcClock().now();
+
+        final RunContext runContext = new RunContext(
+                commandId,
+                commandName,
+                startTime
+        );
 
         final Credentials credentials = mock(Credentials.class);
         final JmxParameters jmxParameters = mock(JmxParameters.class);
@@ -104,6 +124,7 @@ public class SystemCommandInvokerTest {
         when(systemCommanderClientFactory.create(jmxParameters)).thenReturn(systemCommanderClient);
         when(systemCommanderClient.getRemote(contextName)).thenReturn(systemCommanderMBean);
         when(systemCommanderMBean.call(commandName)).thenReturn(commandId);
+        when(clock.now()).thenReturn(startTime);
 
         systemCommandInvoker.runSystemCommand(commandName, jmxParameters);
 
@@ -122,7 +143,7 @@ public class SystemCommandInvokerTest {
         inOrder.verify(systemCommanderClient).getRemote(contextName);
         inOrder.verify(systemCommanderMBean).call(commandName);
         inOrder.verify(toConsolePrinter).printf("System command '%s' with id '%s' successfully sent to %s", commandName, commandId, contextName);
-        inOrder.verify(commandPoller).runUntilComplete(systemCommanderMBean, commandId, commandName);
+        inOrder.verify(commandPoller).runUntilComplete(systemCommanderMBean, runContext);
     }
 
     @Test(expected = UnrunnableSystemCommandException.class)
